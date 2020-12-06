@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<body>
+<div>
+    <h1>Головна сторінка</h1>
+</div>
+{{login}}: Статус:
+<div>{{status}}</div>
+
+<div><form action="/main" method="post">
+    <input type="submit" value="Персональна сторінка"/>
+    <input type="hidden" name="_csrf" value="{{_csrf.token}}">
+</form> </div>
+
+
+
+
+
+<div><form action="/elections" method="get">
+    <input type="submit" value="До списку виборів"/>
+    <input type="hidden" name="_csrf" value="{{_csrf.token}}">
+</form> </div>
+
+
+<div><form action="/candidate" method="get">
+    <input type="submit" value="Переглянути список кандидатів."/>
+    <input type="hidden" name="_csrf" value="{{_csrf.token}}">
+</form> </div>
+
+
+
+
+
+
+<div><form action="/logout" method="post">
+    <input type="submit" value="Вийти"/>
+    <input type="hidden" name="_csrf" value="{{_csrf.token}}">
+</form> </div>
+
+
+
+
+<div>
+    {{#celections}}
+        <div>
+            {{election.electionType.type}} election
+            {{election.openDate}}
+            {{election.closeDate}}
+
+            {{#candidate.fullname}}
+                {{candidate.fullname}}
+            {{/candidate.fullname}}
+            <a href="/election/{{election.id}}/details">Деталі</a>
+        </div>
+    {{/celections}}
+
+</div>
+
+</body>
+</html>

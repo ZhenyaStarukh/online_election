@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<body>
+
+<div><h1>User page</h1></div>
+
+{{#message}}
+    {{message}}
+{{/message}}
+
+
+<div>
+    <h3>Інформація</h3>
+    {{#user}}
+        <div>Логін: {{login}}</div>
+        <div>ПІБ: {{fullName}}</div>
+        <div>Дата народження: {{dob}}</div>
+        <div>Місце прописки: {{residence}}</div>
+    {{/user}}
+</div>
+
+<a href="/user/changePassword">Змінити пароль</a>
+<a href="/main">На головну сторінку</a>
+</body>
+</html>

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<body>
+
+<div><h1>Election List</h1></div>
+
+{{#message}}
+    {{message}}
+{{/message}}
+
+{{#filter}}
+    <div>
+        <form action="/elections" method="post">
+            <select name="type">
+                <option value="closed">
+                    Closed
+                </option>
+                <option value="opened">
+                    Opened
+                </option>
+                <option value="not yet">
+                    Not Yet Opened
+                </option>
+            </select>
+
+            <label>Date:<input type="datetime-local" name="date" value="2020-01-01 00:00:00.0"/></label>
+
+            <input type="hidden" name="_csrf" value="{{_csrf.token}}">
+            <input type="submit" value="Filter"/>
+        </form>
+    </div>
+{{/filter}}
+
+
+
+{{#election}}
+    <div>
+        {{id}},
+        {{#place}}{{place}}, {{/place}}{{^place}}{{/place}}
+        {{openDate}},
+        {{closeDate}}
+        {{#electionType.type}}{{electionType.type}}{{/electionType.type}}
+        <form action="/election/{{id}}" method="get">
+            <input type="hidden" name="_csrf" value="{{_csrf.token}}">
+            <input type="submit" value="Look details"/>
+        </form>
+
+        {{#edit}}
+            <form action="/election/edit/{{id}}" method="get">
+                <input type="hidden" name="_csrf" value="{{_csrf.token}}">
+                <input type="submit" value="EditElections"/>
+            </form>
+
+        {{/edit}}
+        {{#vote}}
+            <form action="/election/vote/{{id}}" method="get">
+                <input type="hidden" name="_csrf" value="{{_csrf.token}}">
+                <input type="submit" value="Vote"/>
+            </form>
+        {{/vote}}
+    </div>
+{{/election}}
+{{^election}}
+    No elections
+{{/election}}
+
+<a href="/main">Go to main page</a>
+</body>
+</html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<body>
+
+<div><h1>Election List</h1></div>
+
+{{#message}}
+    {{message}}
+{{/message}}
+
+{{^message}}
+{{#candidate}}
+    <div>
+        {{id}},
+        {{fullname}},
+        {{dob}},
+        {{residence}},
+        {{#party}}{{party}}{{/party}}{{^party}}{{/party}}
+        <form action="/election/{{election_id}}/add/" method="post">
+        <input type="hidden" name="candidate_id" value="{{id}}">
+        <input type="hidden" name="_csrf" value="{{_csrf.token}}">
+        <input type="submit" value="Add"/>
+        </form>
+    </div>
+{{/candidate}}
+{{^candidate}}
+    No candidates is found.
+{{/candidate}}
+{{/message}}
+
+<a href="/main">Go to main page</a>
+</body>
+</html>

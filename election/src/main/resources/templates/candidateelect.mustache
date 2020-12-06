@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<body>
+
+<div><h2>{{candidate}}</h2></div>
+
+
+{{#message}}
+    {{message}}
+{{/message}}
+
+
+{{#election}}
+    <div>{{id}}, {{openDate}}, {{closeDate}}, <a href="/election/{{id}}">Details</a></div>
+{{/election}}
+
+<a href="/main">Go to main page</a>
+</body>
+</html>

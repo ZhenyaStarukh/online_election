@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<body>
+
+{{#message}}
+    {{message}}
+{{/message}}
+
+
+<form action="/userInfo" method="post">
+<div><h1>Реєстраація: частина 2</h1></div>
+<div><h3>Для того, щоб ви могли голосувати на цьому ресурсі, слід заповнити наступні дані.</h3></div>
+<div><label>ІПН: <input type="text", name="idNum"/></label></div>
+<div><label>ПІБ: <input type="text", name="fullname"/></label></div>
+<div><label>Дата народження: <input type="date", name="dob" value="2020-01-01"/></label></div>
+<div><label>Місце прописки: <input type="text", name="residence"/></label></div>
+<input type="hidden" name="_csrf" value="{{_csrf.token}}">
+<div><input type="submit" value="Підтвердити"/></div>
+    <a href="/main">Повернутися на головну сторінку</a>
+</form>
+</body>
+</html>

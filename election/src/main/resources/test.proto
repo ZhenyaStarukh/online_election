@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+option  java_package = "com.example.election.classes.grpc";
+
+service role{
+  rpc getRole(Role) returns (Response);
+}
+
+message Role{
+  string name = 1;
+}
+
+message Response{
+  string response = 1;
+}

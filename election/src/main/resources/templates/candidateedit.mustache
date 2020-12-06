@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<body>
+
+<div><h1>Edit candidate</h1></div>
+
+{{#message}}
+    {{message}}
+{{/message}}
+
+{{^message}}
+{{#candidate}}
+    <div>
+        <form action="/candidate/edit/{{id}}" method="post">
+            <input type="text" name="fullname" value="{{fullname}}"/>
+            <input type="date" name="dob" value="{{dob}}"/>
+            <input type="text" name="residence" value="{{residence}}"/>
+            {{#party}}<input type="text" name="party" value="{{party}}"/>{{/party}}
+            <input type="hidden" name="_csrf" value="{{_csrf.token}}">
+            <input type="submit" value="Save changes"/>
+        </form>
+    </div>
+{{/candidate}}
+{{^candidate}}
+    No candidates is found.
+{{/candidate}}
+{{/message}}
+
+<a href="/main">Go to main page</a>
+</body>
+</html>

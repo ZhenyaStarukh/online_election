@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<body>
+
+<div><h1>Election List</h1></div>
+
+{{#message}}
+    {{message}}
+{{/message}}
+
+
+{{#election}}
+    <div>
+        <form action="/election/edit/{{id}}" method="post">
+            {{#place}}<input type="text" name="place" value="{{place}}"/>{{/place}}
+            {{^place}}<input type="text" name="place"/>{{/place}}
+            {{#openDate}}<input type="datetime-local" name="openDate" value="{{openDate}}"/>{{/openDate}}
+            {{^openDate}}<input type="datetime-local" name="openDate"/>{{/openDate}}
+            {{#closeDate}}<input type="datetime-local" name="closeDate" value="{{closeDate}}"/>{{/closeDate}}
+            {{^closeDate}}<input type="datetime-local" name="closeDate"/>{{/closeDate}}
+            {{#electionType}}
+                <input type="text" name="type" value="{{type}}"/>
+            {{/electionType}}
+            <input type="hidden" name="_csrf" value="{{_csrf.token}}">
+            <input type="submit" value="Edit"/>
+        </form>
+
+        <form action="/election/edit/{{id}}/delete" method="post">
+            <input type="hidden" name="_csrf" value="{{_csrf.token}}">
+            <input type="submit" value="Delete"/>
+        </form>
+
+    </div>
+{{/election}}
+
+{{^message}}
+{{#candidateElection}}
+    <div>
+        {{candidate.id}},
+        {{candidate.fullname}},
+        <form action="/election/editCE/{{id}}" method="post">
+            <input type="text" name="programLink" value="{{programLink}}"/>
+            <input type="hidden" name="_csrf" value="{{_csrf.token}}">
+            <input type="submit" value="Edit"/>
+        </form>
+
+        <form action="/election/editCE/{{id}}/delete" method="post">
+            <input type="hidden" name="_csrf" value="{{_csrf.token}}">
+            <input type="submit" value="Delete"/>
+        </form>
+
+         <form action="/candidate/edit/{{candidate.id}}" method="get">
+            <input type="hidden" name="_csrf" value="{{_csrf.token}}">
+            <input type="submit" value="Edit Candidate"/>
+        </form>
+    </div>
+{{/candidateElection}}
+{{^candidateElection}}
+    No candidates is found.
+{{/candidateElection}}
+
+<div>
+<form action="/election/{{id}}/add" method="get">
+    <input type="hidden" name="_csrf" value="{{_csrf.token}}">
+    <input type="submit" value="Add candidates"/>
+</form>
+</div>
+{{/message}}
+<a href="/main">Go to main page</a>
+</body>
+</html>

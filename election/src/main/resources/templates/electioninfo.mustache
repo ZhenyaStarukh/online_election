@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<body>
+
+<div><h1>Election Details</h1></div>
+<div><h2>Candidates</h2></div>
+
+{{#message}}
+    {{message}}
+{{/message}}
+
+
+{{#candidateElection}}
+    <div>
+        {{candidate.fullname}},
+        {{#candidate.party}}{{candidate.party}}, {{/candidate.party}} Link to program:
+        {{#programLink}}<a href="{{programLink}}">ProgramLink</a>{{/programLink}}
+        {{#result}}{{voteNumber}}{{/result}}
+        {{#vote}}
+            <form action="/election/vote/{{id}}" method="post">
+                <input type="hidden" name="_csrf" value="{{_csrf.token}}">
+                <input type="submit" value="Vote for this Candidate"/>
+            </form>
+        {{/vote}}
+
+        <div><a href="/candidate/{{candidate.id}}">Детальніше про кандидата</a> </div>
+    </div>
+{{/candidateElection}}
+{{^candidateElection}}
+    {{#some_message}}
+        {{some_message}}
+    {{/some_message}}
+{{/candidateElection}}
+
+{{#add}}
+    <form action="/election/{{id}}/add" method="get">
+        <input type="hidden" name="_csrf" value="{{_csrf.token}}">
+        <input type="submit" value="Add candidates"/>
+    </form>
+{{/add}}
+
+<a href="/main">Go to main page</a>
+</body>
+</html>

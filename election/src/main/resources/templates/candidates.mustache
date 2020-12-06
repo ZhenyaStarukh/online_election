@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<body>
+
+<div><h1>Кандидати</h1></div>
+
+{{#message}}
+    {{message}}
+{{/message}}
+
+
+<div>
+    <form action="/candidate" method="post">
+        <label>Name:<input type="text" name="name"/></label>
+        <label>Place:<input type="text" name="place"/></label>
+        <label>Party:<input type="text" name="party"/></label>
+        <input type="hidden" name="_csrf" value="{{_csrf.token}}">
+        <input type="submit" value="Filter"/>
+    </form>
+</div>
+
+
+{{#candidate}}
+    <div>
+        {{id}},
+        {{fullname}},
+        {{dob}},
+        {{residence}},
+        {{#party}}{{party}}{{/party}}{{^party}}{{/party}}
+        {{#admin}}
+        <form action="/candidate/edit/{{id}}" method="get">
+            <input type="hidden" name="_csrf" value="{{_csrf.token}}">
+            <input type="submit" value="Edit"/>
+        </form>
+            <form action="/candidate/{{id}}/delete" method="post">
+                <input type="hidden" name="_csrf" value="{{_csrf.token}}">
+                <input type="submit" value="Delete"/>
+            </form>
+        <form action="/election/candidate/{{id}}" method="get">
+            <input type="hidden" name="_csrf" value="{{_csrf.token}}">
+            <input type="submit" value="В яких виборах приймав/приймає участь"/>
+        </form>
+        {{/admin}}
+    </div>
+{{/candidate}}
+{{^candidate}}
+    No candidates was found.
+{{/candidate}}
+
+<a href="/main">На головну сторінку</a>
+</body>
+</html>

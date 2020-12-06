@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<body>
+
+<div><h1>Create new candidate</h1></div>
+
+{{#message}}
+    {{message}}
+{{/message}}
+
+
+
+<div>
+    <form action="/candidate/create" method="post">
+        <input type="text" name="fullname"/>
+        <input type="date" name="dob"/>
+        <input type="text" name="residence"/>
+        <input type="text" name="party"/>
+        <input type="hidden" name="_csrf" value="{{_csrf.token}}">
+        <input type="submit" value="Create"/>
+    </form>
+</div>
+
+
+
+<a href="/main">Go to main page</a>
+</body>
+</html>
