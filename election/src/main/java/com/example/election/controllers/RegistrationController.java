@@ -3,8 +3,8 @@ package com.example.election.controllers;
 import com.example.election.classes.auxiliaryClasses.UserEdit;
 import com.example.election.classes.mainClasses.Status;
 import com.example.election.classes.mainClasses.User;
-import com.example.election.repos.UserRepo;
 import com.example.election.services.AuxiliaryService;
+import com.example.election.services.MainService;
 import com.example.election.services.main.UserService;
 import com.example.election.web.UserRegistrationDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +26,8 @@ public class RegistrationController {
     private UserService userService;
 
     @Autowired
-    private UserRepo userRepo;
+    private MainService mainService;
+
 
     @GetMapping("/registration")
     public String registration(){
@@ -59,30 +60,10 @@ public class RegistrationController {
         return "user";
     }
 
-//    @PostMapping("/userDetails")
-//    public String details(String fullname, Map<String, Object> model){
-//        System.out.println(fullname);
-//        model.put("message", fullname);
-//        return "user";
-//    }
-
     @GetMapping("/login")
     public String login(){
         return "login";
     }
-
-    @GetMapping("/login?error=true")
-    public String loginError(Map<String,Object> model){
-        model.put("message","Невірний логін або пароль.");
-        return "login";
-    }
-
-    @PostMapping("/login?error=true")
-    public String loginErrorP(Map<String,Object> model){
-        model.put("message","Невірний логін або пароль.");
-        return "login";
-    }
-
 
 
     @PreAuthorize("hasAuthority('Voter')")
@@ -92,7 +73,7 @@ public class RegistrationController {
         if (user.getFullName()==null) {
             return "redirect:/userInfo";
         }
-        else if (user.getStatus().equals(Status.DECLINED)){
+        else if (mainService.isDeclined(user)){
             model.put("message","Your entry was declined. Please enter information again");
             return "user";
         }
@@ -103,7 +84,14 @@ public class RegistrationController {
 
     @GetMapping("/userInfo")
     public String showDetails(@AuthenticationPrincipal User user, Map<String, Object> model){
-        model.put("user",user);
+        if(!user.getIdNum().isBlank()) {
+            try {
+                user.setIdNum(AuxiliaryService.decodeId(user.getIdNum()));
+            } catch (NoSuchAlgorithmException e) {
+                model.put("message","Something went wrong");
+            }
+            model.put("user",user);
+        }
         return "user";
     }
 
@@ -119,7 +107,14 @@ public class RegistrationController {
     @PostMapping("/userInfo")
     public String addDetails(@AuthenticationPrincipal User user, UserEdit userEdit, Map<String, Object> model){
 
-
+        if(!user.getIdNum().isBlank()) {
+            try {
+                user.setIdNum(AuxiliaryService.decodeId(user.getIdNum()));
+            } catch (NoSuchAlgorithmException e) {
+                model.put("message","Something went wrong");
+            }
+            model.put("user",user);
+        }
         if(isNull(userEdit)){
             model.put("message", "Будь-ласка заповніть усі поля!");
             return "user";
@@ -149,7 +144,7 @@ public class RegistrationController {
 
         user.setResidence(residence);
         user.setStatus(Status.PROCESSING);
-        userRepo.save(user);
+        mainService.saveUser(user);
         return "redirect:/adminPage";
     }
 
@@ -158,7 +153,7 @@ public class RegistrationController {
     @GetMapping("/adminPage")
     public String showAdminPage(@AuthenticationPrincipal User admin, Map<String, Object> model)
     {
-        if(admin.getStatus().equals(Status.DECLINED)){
+        if(mainService.isDeclined(admin)){
             model.put("message","Your entry was declined. Please enter information again");
             return "admin";
         }
@@ -168,10 +163,10 @@ public class RegistrationController {
 
         List<User> users;
         if(admin.getLogin().equals("mainAdmin")) {
-            users = getProcessing();
+            users = mainService.getProcessing();
         }
         else {
-            users = userRepo.findAllByStatusAndResidenceContains(Status.PROCESSING,admin.getResidence());
+            users = mainService.findUsersForAdmin(admin);
             users = getProcessingAdmins(false, users);
         }
 
@@ -193,16 +188,11 @@ public class RegistrationController {
         return "adminpage";
     }
 
-    private List<User> getProcessing(){
-        List<User> users = userRepo.findAllByStatus(Status.PROCESSING);
-        users.removeIf(user -> (user.getFullName() == null && user.getRole().getName().equals("User")));
-        return users;
-    }
 
     private List<User> getProcessingAdmins(boolean admin, List<User> users){
         List<User> admins = new ArrayList<>();
         for(User user: users){
-            if(user.getRole().getName().equals("Administrator")) admins.add(user);
+            if(mainService.isAdmin(user)) admins.add(user);
         }
         users.removeAll(admins);
         if(admin) return admins;
@@ -212,13 +202,11 @@ public class RegistrationController {
     @PreAuthorize("hasAuthority('Administrator')")
     @PostMapping("/decline/{login}")
     public String decline(@AuthenticationPrincipal User admin,@PathVariable String login, Map<String, Object> model){
-        if(admin.getStatus().equals(Status.ACCEPTED)){
-            User user = userRepo.findByLogin(login);
+        if(mainService.isAccepted(admin)){
+            User user = userService.findByLogin(login);
             user.setStatus(Status.DECLINED);
-            userRepo.save(user);
-//            List<User> users = getProcessing();
-//            if (!users.isEmpty()) model.put("users", users);
-            //model.put("message","Declined user "+user.getLogin());
+            mainService.saveUser(user);
+
             return "redirect:/adminPage";
         }
         else model.put("message","Ваш акаунт ще не перевірено!");
@@ -229,13 +217,10 @@ public class RegistrationController {
     @PreAuthorize("hasAuthority('Administrator')")
     @PostMapping("/accept/{login}")
     public String accept(@AuthenticationPrincipal User admin,@PathVariable String login, Map<String, Object> model) {
-        if(admin.getStatus().equals(Status.ACCEPTED)) {
-            User user = userRepo.findByLogin(login);
+        if(mainService.isAccepted(admin)) {
+            User user = userService.findByLogin(login);
             user.setStatus(Status.ACCEPTED);
-            userRepo.save(user);
-//            List<User> users = getProcessing();
-//            if (!users.isEmpty()) model.put("users", users);
-            //model.put("message", "Accepted user " + user.getLogin());
+            mainService.saveUser(user);
             return "redirect:/adminPage";
         }
         else model.put("message","Ваш акаунт ще не перевірено!");

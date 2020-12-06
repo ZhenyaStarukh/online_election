@@ -42,26 +42,26 @@
         {{#electionType.type}}{{electionType.type}}{{/electionType.type}}
         <form action="/election/{{id}}" method="get">
             <input type="hidden" name="_csrf" value="{{_csrf.token}}">
-            <input type="submit" value="Look details"/>
+            <input type="submit" value="Переглянути деталі"/>
         </form>
 
         {{#edit}}
             <form action="/election/edit/{{id}}" method="get">
                 <input type="hidden" name="_csrf" value="{{_csrf.token}}">
-                <input type="submit" value="EditElections"/>
+                <input type="submit" value="Змінити інформацію"/>
             </form>
 
         {{/edit}}
         {{#vote}}
             <form action="/election/vote/{{id}}" method="get">
                 <input type="hidden" name="_csrf" value="{{_csrf.token}}">
-                <input type="submit" value="Vote"/>
+                <input type="submit" value="Проголосувати"/>
             </form>
         {{/vote}}
     </div>
 {{/election}}
 {{^election}}
-    No elections
+   Тут поки що порожньо.
 {{/election}}
 
 <a href="/main">Go to main page</a>

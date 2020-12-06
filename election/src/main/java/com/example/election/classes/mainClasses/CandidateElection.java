@@ -8,21 +8,21 @@ public class CandidateElection {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    protected Long id;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "candidate_id"/*, referencedColumnName = "id"*/)
-    private Candidate candidate;
+    protected Candidate candidate;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "election_id"/*, referencedColumnName = "id"*/)
-    private Election election;
+    protected Election election;
 
     @Column(name = "votes_number")
-    private Long voteNumber;
+    protected Long voteNumber;
 
     @Column(name = "program_link")
-    private String programLink;
+    protected String programLink;
 
     public CandidateElection() {
     }

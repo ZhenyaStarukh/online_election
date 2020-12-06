@@ -50,6 +50,9 @@
             {{#candidate.fullname}}
                 {{candidate.fullname}}
             {{/candidate.fullname}}
+            {{^candidate.fullname}}
+                Tie
+            {{/candidate.fullname}}
             <a href="/election/{{election.id}}/details">Деталі</a>
         </div>
     {{/celections}}

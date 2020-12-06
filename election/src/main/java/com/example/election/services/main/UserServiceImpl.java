@@ -54,11 +54,10 @@ public class UserServiceImpl implements UserService {
         user.setResidence(" ");
         user.setStatus(Status.PROCESSING);
 
-//        System.out.println(registration.getPassword() + " - " + passwordEncoder.encode(registration.getPassword()));
         return userRepo.save(user);
     }
 
-    //вствить проверки
+
     public User save(UserEdit userEdit, User user) throws NoSuchAlgorithmException {
         user.setFullName(userEdit.getFullname());
         user.setIdNum(AuxiliaryService.encodeId(userEdit.getIdNum()));
@@ -71,12 +70,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
 
-////        System.out.println("loadUserByUserName: "+user.getLogin()+" "+user.getPassword());
-//        if(user==null){
-//            throw new UsernameNotFoundException("User not found.");
-//        }
-//        return new org.springframework.security.core.userdetails.User(user.getLogin(),
-//                user.getPassword(), mapRolesToAuthorities(user.getRole()));
         return findByLogin(login);
     }
 

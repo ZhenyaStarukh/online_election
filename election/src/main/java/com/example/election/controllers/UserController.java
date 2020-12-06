@@ -2,7 +2,7 @@ package com.example.election.controllers;
 
 import com.example.election.classes.mainClasses.User;
 import com.example.election.config.encode.CustomPasswordEncoder;
-import com.example.election.repos.UserRepo;
+import com.example.election.services.MainService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -17,7 +17,7 @@ import java.util.Map;
 public class UserController {
 
     @Autowired
-    private UserRepo userRepo;
+    private MainService mainService;
 
     @GetMapping("/changePassword")
     public String showChangePassword(@AuthenticationPrincipal User user, Map<String,Object> model){
@@ -38,7 +38,7 @@ public class UserController {
         }
 
         user.setPassword(newPassword);
-        userRepo.save(user);
+        mainService.saveUser(user);
         model.put("message","Successfully changed");
 
         return "changepassword";

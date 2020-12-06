@@ -15,11 +15,11 @@ public interface CandidateElectionRepo extends CrudRepository<CandidateElection,
     List<CandidateElection> findAllByCandidate(Candidate candidate);
     List<CandidateElection> findAllByElection(Election election);
 
-    @Query("SELECT SUM(voteNumber) from CandidateElection")
-    Long getSumOfVotes();
+    @Query("SELECT SUM(voteNumber) from CandidateElection where election = :election")
+    Long getSumOfVotes(@Param("election") Election election);
 
-    @Query("Select MAX(voteNumber) from CandidateElection")
-    Long getMax();
+    @Query("Select MAX(voteNumber) from CandidateElection where election = :election")
+    Long getMax(@Param("election") Election election);
 
     @Query("SELECT ce from CandidateElection ce where ce.voteNumber= :maxv and ce.election= :election")
     List<CandidateElection> getWinner(@Param("election") Election election, @Param("maxv") Long max);

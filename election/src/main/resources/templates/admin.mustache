@@ -8,11 +8,13 @@
 
 
 <form action="/adminInfo" method="post">
-    <div><h1>Registration: part 2</h1></div>
-    <div><label>Residence: <input type="text", name="residence"/></label></div>
+    <div><h1>Реєстрація: частина 2</h1></div>
+    <div><h3>Для того, щоб Ви могли використовувати можливосі свого профілю, слід заповнити наступні дані.</h3></div>
+<!--    змінити формулювання (замість "місце")-->
+    <div><label>Місце: <input type="text", name="residence"/></label></div>
     <input type="hidden" name="_csrf" value="{{_csrf.token}}">
-    <div><input type="submit" value="Enter"/></div>
-    <a href="/main">Go to main page</a>
+    <div><input type="submit" onclick="alert('Ваші дані відправлено на перевірку. Статус свого профілю Ви зможете побачити на головній сторінці.')" value="Підтвердити"/></div>
+    <a href="/main">На головну сторінку</a>
 </form>
 </body>
 </html>

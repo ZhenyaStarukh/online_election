@@ -11,11 +11,11 @@
 
 <div>
     <form action="/candidate" method="post">
-        <label>Name:<input type="text" name="name"/></label>
-        <label>Place:<input type="text" name="place"/></label>
-        <label>Party:<input type="text" name="party"/></label>
+        <label>Ім'я:<input type="text" name="name"/></label>
+        <label>Місце проживання:<input type="text" name="place"/></label>
+        <label>Партія:<input type="text" name="party"/></label>
         <input type="hidden" name="_csrf" value="{{_csrf.token}}">
-        <input type="submit" value="Filter"/>
+        <input type="submit" value="Фільтрувати"/>
     </form>
 </div>
 
@@ -30,21 +30,21 @@
         {{#admin}}
         <form action="/candidate/edit/{{id}}" method="get">
             <input type="hidden" name="_csrf" value="{{_csrf.token}}">
-            <input type="submit" value="Edit"/>
+            <input type="submit" value="Змінити"/>
         </form>
             <form action="/candidate/{{id}}/delete" method="post">
                 <input type="hidden" name="_csrf" value="{{_csrf.token}}">
-                <input type="submit" value="Delete"/>
+                <input type="submit" value="Видалити"/>
             </form>
+        {{/admin}}
         <form action="/election/candidate/{{id}}" method="get">
             <input type="hidden" name="_csrf" value="{{_csrf.token}}">
             <input type="submit" value="В яких виборах приймав/приймає участь"/>
         </form>
-        {{/admin}}
     </div>
 {{/candidate}}
 {{^candidate}}
-    No candidates was found.
+    Тут поки порожньо.
 {{/candidate}}
 
 <a href="/main">На головну сторінку</a>

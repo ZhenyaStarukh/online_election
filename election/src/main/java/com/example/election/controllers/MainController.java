@@ -1,16 +1,15 @@
 package com.example.election.controllers;
 
 import com.example.election.classes.mainClasses.*;
-import com.example.election.repos.CandidateElectionRepo;
-import com.example.election.repos.ElectionRepo;
-import com.example.election.services.AuxiliaryService;
+
+import com.example.election.services.MainService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import java.sql.Time;
+
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,10 +19,7 @@ import java.util.Map;
 public class MainController {
 
     @Autowired
-    private ElectionRepo electionRepo;
-
-    @Autowired
-    private CandidateElectionRepo candidateElectionRepo;
+    MainService mainService;
 
     @GetMapping("/")
     public String greeting( Map<String,Object> model){
@@ -37,27 +33,25 @@ public class MainController {
     }
 
     private CandidateElection result(Election election){
-        List<CandidateElection> winners = candidateElectionRepo.getWinner(election, candidateElectionRepo.getMax());
+        List<CandidateElection> winners = mainService.getWinner(election);
 
         if(winners.size()==1) return winners.get(0);
         else return null;
     }
 
     private String getStatusUA(Status status){
-        String ans = switch (status) {
+        return switch (status) {
             case ACCEPTED -> "Вашу інформацію підтверджено.Ви можете в повному обсязі використовувати можливості свого профілю.";
             case PROCESSING -> "Ваша інформація оброблюється.Після підтвердження Ви зможете в повному обсязі використовувати можливості свого профілю.";
             case DECLINED -> "Інформація, яку ви надали, відхилена.При переході на свою персональну сторінку Вам доведеться ще раз ввести усю інформацію.";
         };
-        return ans;
     }
 
     @GetMapping("/main")
     public String main(@AuthenticationPrincipal User user, Map<String,Object> model){
         Timestamp current = new Timestamp(System.currentTimeMillis());
-        List<Election> elections = electionRepo.findAllByCloseDateLessThanEqual(current);
+        List<Election> elections = mainService.findAllElectionsByCloseDateBefore(current);
         List<CandidateElection> candidateElections = new ArrayList<>();
-
         for(Election election: elections){
             CandidateElection winner= result(election);
             if(winner!=null){
@@ -79,13 +73,13 @@ public class MainController {
         Timestamp current = new Timestamp(System.currentTimeMillis());
         if(user.getRole().getName().equals("Administrator")) {
             model.put("edit", "edit");
-            List<Election> elections = electionRepo.findAll();
+            List<Election> elections = mainService.findAllElections();
             model.put("election",elections);
             model.put("filter","yes");
         }
         else {
             model.put("vote","vote");
-            List<Election> elections = electionRepo.getByDates(current,current);
+            List<Election> elections = mainService.findOpened(current);
             model.put("election",elections);
         }
 
@@ -99,10 +93,10 @@ public class MainController {
 
             List<Election> elections;
             switch (type) {
-                case "closed" -> elections = electionRepo.findAllByCloseDateLessThanEqual(date);
-                case "opened" -> elections = electionRepo.findAllByOpenDateLessThanEqual(date);
-                case "not yet" -> elections = electionRepo.findAllByOpenDateGreaterThanEqual(date);
-                default -> elections = electionRepo.findAll();
+                case "closed" -> elections = mainService.findClosed(date);
+                case "opened" -> elections = mainService.findOpened(date);
+                case "not yet" -> elections = mainService.findNotYetOpened(date);
+                default -> elections = mainService.findAllElections();
             }
 
             model.put("edit", "edit");
@@ -112,7 +106,7 @@ public class MainController {
         }
         else {
             model.put("vote","vote");
-            List<Election> elections = electionRepo.getByDates(current,current);
+            List<Election> elections = mainService.findOpened(current);
             model.put("election",elections);
         }
         return "elections";

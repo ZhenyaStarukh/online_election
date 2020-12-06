@@ -19,6 +19,6 @@ public interface ElectionRepo extends CrudRepository<Election,Long> {
     List<Election> findAllByCloseDateLessThanEqual(Timestamp date);
     List<Election> findAllByOpenDateLessThanEqual(Timestamp date);
 
-    @Query("select e from Election e where e.openDate <= :open and e.closeDate >= :close")
-    List<Election> getByDates(@Param("open") Timestamp open, @Param("close") Timestamp close);
+    @Query("select e from Election e where e.openDate <= :date and e.closeDate >= :date")
+    List<Election> getByDates(@Param("date") Timestamp date);
 }

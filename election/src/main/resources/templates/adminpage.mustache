@@ -17,20 +17,22 @@
         {{#residence}}{{residence}}{{/residence}} {{^residence}}{{/residence}}
         <form action="/decline/{{login}}" method="post">
             <input type="hidden" name="_csrf" value="{{_csrf.token}}">
-            <input type="submit" value="Decline"/>
+            <input type="submit" onclick="alert('Відхилено')" value="Відхилити"/>
         </form>
         <form action="/accept/{{login}}" method="post">
             <input type="hidden" name="_csrf" value="{{_csrf.token}}">
-            <input type="submit" value="Accept"/>
+            <input type="submit" onclick="alert('Прийнято')" value="Прийняти"/>
         </form>
     </div>
 {{/users}}
 {{^users}}
-    No users needed allowance
+
 {{/users}}
-<div><a href="/user/changePassword">Change password</a></div>
-<div><a href="/main">Go to main page</a></div>
-<div><a href="/candidate/create">Add new candidate</a></div>
-<div><a href="/election/create">Add new election</a></div>
+<div><a href="/user/changePassword">Змінити пароль</a></div>
+
+<div><a href="/candidate/create">Додати нового кандидата</a></div>
+<div><a href="/election/create">Додати нові вибори</a></div>
+
+<div><a href="/main">Повернутися на головну сторінку</a></div>
 </body>
 </html>

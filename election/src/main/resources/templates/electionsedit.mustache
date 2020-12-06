@@ -22,12 +22,12 @@
                 <input type="text" name="type" value="{{type}}"/>
             {{/electionType}}
             <input type="hidden" name="_csrf" value="{{_csrf.token}}">
-            <input type="submit" value="Edit"/>
+            <input type="submit" value="Змінити"/>
         </form>
 
         <form action="/election/edit/{{id}}/delete" method="post">
             <input type="hidden" name="_csrf" value="{{_csrf.token}}">
-            <input type="submit" value="Delete"/>
+            <input type="submit" value="Видалити"/>
         </form>
 
     </div>
@@ -41,17 +41,17 @@
         <form action="/election/editCE/{{id}}" method="post">
             <input type="text" name="programLink" value="{{programLink}}"/>
             <input type="hidden" name="_csrf" value="{{_csrf.token}}">
-            <input type="submit" value="Edit"/>
+            <input type="submit" value="Змінити"/>
         </form>
 
         <form action="/election/editCE/{{id}}/delete" method="post">
             <input type="hidden" name="_csrf" value="{{_csrf.token}}">
-            <input type="submit" value="Delete"/>
+            <input type="submit" value="Видалити"/>
         </form>
 
          <form action="/candidate/edit/{{candidate.id}}" method="get">
             <input type="hidden" name="_csrf" value="{{_csrf.token}}">
-            <input type="submit" value="Edit Candidate"/>
+            <input type="submit" value="Змінити інформацію кандидата"/>
         </form>
     </div>
 {{/candidateElection}}
@@ -62,7 +62,7 @@
 <div>
 <form action="/election/{{id}}/add" method="get">
     <input type="hidden" name="_csrf" value="{{_csrf.token}}">
-    <input type="submit" value="Add candidates"/>
+    <input type="submit" value="Додати кандидатів"/>
 </form>
 </div>
 {{/message}}

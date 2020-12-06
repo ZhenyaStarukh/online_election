@@ -16,16 +16,17 @@
             <input type="date" name="dob" value="{{dob}}"/>
             <input type="text" name="residence" value="{{residence}}"/>
             {{#party}}<input type="text" name="party" value="{{party}}"/>{{/party}}
+            {{^party}}<input type="text" name="party">{{/party}}
             <input type="hidden" name="_csrf" value="{{_csrf.token}}">
             <input type="submit" value="Save changes"/>
         </form>
     </div>
 {{/candidate}}
 {{^candidate}}
-    No candidates is found.
+    Не знайдено жодного кандидата.
 {{/candidate}}
 {{/message}}
 
-<a href="/main">Go to main page</a>
+<a href="/main">Повернутися на головну сторінку</a>
 </body>
 </html>

@@ -1,9 +1,5 @@
 package com.example.election.web;
 
-
-import com.example.election.services.AuxiliaryService;
-import com.example.election.web.constraint.FieldMatch;
-
 import javax.validation.constraints.NotEmpty;
 
 public class UserRegistrationDto {

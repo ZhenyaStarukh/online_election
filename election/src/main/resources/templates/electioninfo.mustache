@@ -10,12 +10,29 @@
 {{/message}}
 
 
+{{#result}}
+
+    {{#candidatePercent}}
+        <div>
+            {{candidate.fullname}},
+            {{#candidate.party}}{{candidate.party}}, {{/candidate.party}} Link to program:
+            {{#programLink}}<a href="{{programLink}}">Посилання на програму</a>{{/programLink}}
+            {{voteNumber}} - {{percent}}%
+        </div>
+    {{/candidatePercent}}
+    {{^candidatePercent}}
+        Не знайдено жодного кандидата.
+    {{/candidatePercent}}
+
+{{/result}}
+{{^result}}
 {{#candidateElection}}
+
     <div>
         {{candidate.fullname}},
         {{#candidate.party}}{{candidate.party}}, {{/candidate.party}} Link to program:
-        {{#programLink}}<a href="{{programLink}}">ProgramLink</a>{{/programLink}}
-        {{#result}}{{voteNumber}}{{/result}}
+        {{#programLink}}<a href="{{programLink}}">осилання на програму</a>{{/programLink}}
+
         {{#vote}}
             <form action="/election/vote/{{id}}" method="post">
                 <input type="hidden" name="_csrf" value="{{_csrf.token}}">
@@ -25,17 +42,20 @@
 
         <div><a href="/candidate/{{candidate.id}}">Детальніше про кандидата</a> </div>
     </div>
+
 {{/candidateElection}}
+
 {{^candidateElection}}
     {{#some_message}}
         {{some_message}}
     {{/some_message}}
 {{/candidateElection}}
+{{/result}}
 
 {{#add}}
     <form action="/election/{{id}}/add" method="get">
         <input type="hidden" name="_csrf" value="{{_csrf.token}}">
-        <input type="submit" value="Add candidates"/>
+        <input type="submit" value="Додати кандидатів"/>
     </form>
 {{/add}}
 

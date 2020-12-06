@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <body>
 
-<div><h1>Election List</h1></div>
+<div><h1>Додати кандидата</h1></div>
 
 {{#message}}
     {{message}}
@@ -19,15 +19,15 @@
         <form action="/election/{{election_id}}/add/" method="post">
         <input type="hidden" name="candidate_id" value="{{id}}">
         <input type="hidden" name="_csrf" value="{{_csrf.token}}">
-        <input type="submit" value="Add"/>
+        <input type="submit" value="Додати"/>
         </form>
     </div>
 {{/candidate}}
 {{^candidate}}
-    No candidates is found.
+    Не знайдено жодного кандидата.
 {{/candidate}}
 {{/message}}
 
-<a href="/main">Go to main page</a>
+<a href="/main">На головну сторінку</a>
 </body>
 </html>
