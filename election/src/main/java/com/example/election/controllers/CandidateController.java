@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
 
@@ -114,6 +115,7 @@ public class CandidateController {
     @GetMapping("/create")
     public String showCreatePage(@AuthenticationPrincipal User admin,Map<String, Object> model){
         if(!mainService.isAccepted(admin)) model.put("message","Ваш акаунт ще не перевірено!");
+        model.put("current",mainService.getDateFromTimestamp(new Timestamp(System.currentTimeMillis())));
         return "candidatesave";
     }
 
@@ -123,6 +125,7 @@ public class CandidateController {
         if(mainService.isAccepted(admin)){
             if(candidate.getFullname().isBlank() || candidate.getResidence().isBlank()){
                 model.put("message","Поля ПІБ та місця прописки повинні бути заповненими!");
+                model.put("current",mainService.getDateFromTimestamp(new Timestamp(System.currentTimeMillis())));
                 return "candidatesave";
             }
 
@@ -136,6 +139,7 @@ public class CandidateController {
         }
         else {
             model.put("message","Ваш акаунт ще не перевірено!");
+            model.put("current",mainService.getDateFromTimestamp(new Timestamp(System.currentTimeMillis())));
             return "candidatesave";
         }
     }

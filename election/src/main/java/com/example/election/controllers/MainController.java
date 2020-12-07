@@ -14,6 +14,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Controller
 public class MainController {
@@ -22,7 +23,7 @@ public class MainController {
     MainService mainService;
 
     @GetMapping("/")
-    public String greeting( Map<String,Object> model){
+    public String greeting(Map<String,Object> model){
         return "greeting";
     }
 
@@ -54,12 +55,7 @@ public class MainController {
         List<CandidateElection> candidateElections = new ArrayList<>();
         for(Election election: elections){
             CandidateElection winner= result(election);
-            if(winner!=null){
-                candidateElections.add(winner);
-            }
-            else {
-                candidateElections.add(new CandidateElection(null,election,null));
-            }
+            candidateElections.add(Objects.requireNonNullElseGet(winner, () -> new CandidateElection(null, election, null)));
         }
 
         model.put("status",getStatusUA(user.getStatus()));
@@ -71,6 +67,7 @@ public class MainController {
     @GetMapping("/elections")
     public String electionList(@AuthenticationPrincipal User user, Map<String, Object> model){
         Timestamp current = new Timestamp(System.currentTimeMillis());
+        model.put("current", mainService.getTimestampWithZeroTime(current));
         if(user.getRole().getName().equals("Administrator")) {
             model.put("edit", "edit");
             List<Election> elections = mainService.findAllElections();
@@ -89,6 +86,7 @@ public class MainController {
     @PostMapping("/elections")
     public String electionListF(@AuthenticationPrincipal User user,String type, Timestamp date, Map<String, Object> model){
         Timestamp current = new Timestamp(System.currentTimeMillis());
+        model.put("current", mainService.getTimestampWithZeroTime(current));
         if(user.getRole().getName().equals("Administrator")) {
 
             List<Election> elections;

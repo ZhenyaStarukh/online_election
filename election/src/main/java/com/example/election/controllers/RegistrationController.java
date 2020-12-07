@@ -74,7 +74,7 @@ public class RegistrationController {
             return "redirect:/userInfo";
         }
         else if (mainService.isDeclined(user)){
-            model.put("message","Your entry was declined. Please enter information again");
+            model.put("message","Ваш запит було відхилено. Будь-ласка введіть інформацію ще раз.");
             return "user";
         }
 
@@ -88,7 +88,7 @@ public class RegistrationController {
             try {
                 user.setIdNum(AuxiliaryService.decodeId(user.getIdNum()));
             } catch (NoSuchAlgorithmException e) {
-                model.put("message","Something went wrong");
+                model.put("message","Щось пішло не так! Поверніться на головну сторінку.");
             }
             model.put("user",user);
         }
@@ -111,7 +111,7 @@ public class RegistrationController {
             try {
                 user.setIdNum(AuxiliaryService.decodeId(user.getIdNum()));
             } catch (NoSuchAlgorithmException e) {
-                model.put("message","Something went wrong");
+                model.put("message","Щось пішло не так! Поверніться на головну сторінку");
             }
             model.put("user",user);
         }
@@ -154,7 +154,7 @@ public class RegistrationController {
     public String showAdminPage(@AuthenticationPrincipal User admin, Map<String, Object> model)
     {
         if(mainService.isDeclined(admin)){
-            model.put("message","Your entry was declined. Please enter information again");
+            model.put("message","Ваш запит було відхилено. Будь-ласка введіть інформацію ще раз.");
             return "admin";
         }
         else if (admin.getResidence().isBlank() && !admin.getLogin().equals("mainAdmin")){

@@ -36,8 +36,9 @@ public class ElectionController {
     public String showDetAfter(@PathVariable Long id, @AuthenticationPrincipal User user, Map<String,Object> model){
         Timestamp current = new Timestamp(System.currentTimeMillis());
         Election election = mainService.getElectionById(id);
+        model.put("election",election);
         if(election.getCloseDate().after(current)){
-            model.put("message","Cannot see results yet.");
+            model.put("message","На жаль, ще не можна переглянути результати.");
         }
         else{
             List<CandidateElection> candidateElections = mainService.findAllCEByElection(election);
@@ -50,19 +51,22 @@ public class ElectionController {
                 model.put("result","yes");
                 model.put("candidatePercent",candidatePercents);
             }
-            else model.put("some_message", "No candidates found");
+            else model.put("some_message", "Не знайдено жодного кандидата.");
         }
         return  "electioninfo";
     }
 
     @GetMapping("{id}")
     public String showDetails(@PathVariable Long id,@AuthenticationPrincipal User user, Map<String,Object> model){
-        List<CandidateElection> candidateElections = mainService.findAllCEByElection(mainService.getElectionById(id));
+        Election election = mainService.getElectionById(id);
+        List<CandidateElection> candidateElections = mainService.findAllCEByElection(election);
+
+        model.put("election",election);
 
         if(!candidateElections.isEmpty()){
             model.put("candidateElection",candidateElections);
         }
-        else model.put("some_message", "No candidates found");
+        else model.put("some_message", "Не знайдено жодного кандидата.");
         if(mainService.isAdmin(user)){
 
             model.put("add","yes");
@@ -110,7 +114,7 @@ public class ElectionController {
         Election election = mainService.getElectionById(election_id);
         Candidate candidate = mainService.getCandidateById(candidate_id);
         if(mainService.isAccepted(admin)) {
-            if (isGoing(election, current)) model.put("message", "Cannot alter ongoing election!");
+            if (isGoing(election, current)) model.put("message", "Не можна змінювати вибори, що проходять у даний момент!");
             else {
                 CandidateElection candidateElection = new CandidateElection(candidate, election, "");
                 mainService.saveCE(candidateElection);
@@ -127,12 +131,16 @@ public class ElectionController {
 
     @PreAuthorize("hasAuthority('Administrator')")
     @PostMapping("/edit/{id}")
-    public String electionEdit(@AuthenticationPrincipal User admin, @PathVariable Long id,String place, Timestamp openDate, Timestamp closeDate, String type, Map<String,Object> model){
+    public String electionEdit(@AuthenticationPrincipal User admin, @PathVariable Long id,
+                               String place,
+                               Timestamp openDate,
+                               Timestamp closeDate,
+                               String type, Map<String,Object> model){
         Election election = mainService.getElectionById(id);
         Timestamp current = new Timestamp(System.currentTimeMillis());
         model.put("election_id",id);
         if(mainService.isAccepted(admin)) {
-            if (isGoing(election, current)) model.put("message", "Cannot alter ongoing election!");
+            if (isGoing(election, current)) model.put("message", "Не можна змінювати вибори, що проходять у даний момент!");
             else {
 
                 election.setPlace(place);
@@ -143,6 +151,7 @@ public class ElectionController {
             }
         }
         else model.put("message","Ваш акаунт ще не перевірено!");
+        model.put("typeList",mainService.findAllElectionTypes());
         return "electionsedit";
     }
 
@@ -154,7 +163,7 @@ public class ElectionController {
         model.put("election_id",id);
         if(mainService.isAccepted(admin))
         {
-            if(isGoing(election,current)) model.put("message","Cannot alter ongoing election!");
+            if(isGoing(election,current)) model.put("message","Не можна змінювати вибори, що проходять у даний момент!");
             else {
                 mainService.deleteElection(election);
             }
@@ -177,6 +186,7 @@ public class ElectionController {
             model.put("candidateElection", candidateElections);
         }
         }
+        model.put("typeList",mainService.findAllElectionTypes());
         return "electionsedit";
     }
 
@@ -188,7 +198,7 @@ public class ElectionController {
         model.put("election_id",id);
         if(mainService.isAccepted(admin)) {
             if (isGoing(candidateElection.getElection(), current)) {
-                model.put("message", "Cannot alter ongoing election!");
+                model.put("message", "Не можна змінювати вибори, що проходять у даний момент!");
                 return "electionsedit";
             } else {
                 candidateElection.setProgramLink(programLink);
@@ -196,6 +206,7 @@ public class ElectionController {
                 Election election = mainService.getElectionById(id);
                 model.put("election",election);
                 model.put("candidateElection",mainService.findAllCEByElection(election));
+                model.put("typeList",mainService.findAllElectionTypes());
                 return "electionsedit";
             }
         }
@@ -215,11 +226,11 @@ public class ElectionController {
         CandidateElection candidateElection = mainService.findCEById(id);
         if(mainService.isAccepted(admin)) {
             if (isGoing(candidateElection.getElection(), current)) {
-                model.put("message", "Cannot alter ongoing election!");
-                //make normal return or redirect that works
+                model.put("message", "Не можна змінювати вибори, що проходять у даний момент!");
                 return "electionsedit";
             } else {
                 mainService.deleteCE(candidateElection);
+                model.put("typeList",mainService.findAllElectionTypes());
                 return "electionsedit";
             }
         }
@@ -233,7 +244,7 @@ public class ElectionController {
     @GetMapping("/create")
     public String showCreatePage(@AuthenticationPrincipal User admin, Map<String, Object> model){
         if(!mainService.isAccepted(admin)) model.put("message","Ваш акаунт ще не перевірено!");
-        model.put("typeList",electionTypeRepo.findAll());
+        model.put("typeList",mainService.findAllElectionTypes());
         return "electioncreate";
     }
 
@@ -254,7 +265,7 @@ public class ElectionController {
         else {
             model.put("message","Ваш акаунт ще не перевірено!");
         }
-        model.put("typeList",electionTypeRepo.findAll());
+        model.put("typeList",mainService.findAllElectionTypes());
         return "electioncreate";
     }
 

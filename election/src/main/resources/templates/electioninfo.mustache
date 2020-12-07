@@ -3,6 +3,14 @@
 <body>
 
 <div><h1>Election Details</h1></div>
+
+{{#election}}
+    {{openDate}}  {{closeDate}}
+    {{#electionType}}
+        {{type}}
+    {{/electionType}}
+{{/election}}
+
 <div><h2>Candidates</h2></div>
 
 {{#message}}
@@ -31,7 +39,7 @@
     <div>
         {{candidate.fullname}},
         {{#candidate.party}}{{candidate.party}}, {{/candidate.party}} Link to program:
-        {{#programLink}}<a href="{{programLink}}">осилання на програму</a>{{/programLink}}
+        {{#programLink}}<a href="{{programLink}}">Посилання на програму</a>{{/programLink}}
 
         {{#vote}}
             <form action="/election/vote/{{id}}" method="post">

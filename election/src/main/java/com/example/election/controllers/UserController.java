@@ -33,13 +33,13 @@ public class UserController {
         newPassword = customPasswordEncoder.encode(newPassword);
 
         if (!user.getPassword().equals(oldPassword)){
-            model.put("message", "Wrong old password");
+            model.put("message", "Поточний пароль введено невірно!");
             return "changepassword";
         }
 
         user.setPassword(newPassword);
         mainService.saveUser(user);
-        model.put("message","Successfully changed");
+        model.put("message","Успішно змінено!");
 
         return "changepassword";
     }

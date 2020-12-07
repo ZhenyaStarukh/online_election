@@ -18,9 +18,11 @@
             {{^openDate}}<input type="datetime-local" name="openDate"/>{{/openDate}}
             {{#closeDate}}<input type="datetime-local" name="closeDate" value="{{closeDate}}"/>{{/closeDate}}
             {{^closeDate}}<input type="datetime-local" name="closeDate"/>{{/closeDate}}
-            {{#electionType}}
-                <input type="text" name="type" value="{{type}}"/>
-            {{/electionType}}
+                <select name="type">
+                    {{#typeList}}
+                        <option value="{{type}}">{{type}}</option>
+                    {{/typeList}}
+                </select>
             <input type="hidden" name="_csrf" value="{{_csrf.token}}">
             <input type="submit" value="Змінити"/>
         </form>

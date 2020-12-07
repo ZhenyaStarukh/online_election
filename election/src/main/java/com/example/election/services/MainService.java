@@ -5,6 +5,7 @@ import com.example.election.repos.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -135,6 +136,8 @@ public class MainService {
         return electionTypeRepo.findByType(type);
     }
 
+    public List<ElectionType> findAllElectionTypes(){return (List<ElectionType>) electionTypeRepo.findAll();}
+
     public List<Election> findAllElections(){
         return electionRepo.findAll();
     }
@@ -193,7 +196,14 @@ public class MainService {
             return users;
     }
 
+  public Date getDateFromTimestamp(Timestamp timestamp){
+      return Date.valueOf(timestamp.toString().split(" ",2)[0]);
+  }
 
+  public Timestamp getTimestampWithZeroTime(Timestamp timestamp){
+        Date date = getDateFromTimestamp(timestamp);
+        return Timestamp.valueOf(date.toString()+" 00:00:00.0");
+  }
 
 
 }

@@ -13,7 +13,7 @@
 <div>
     <form action="/candidate/create" method="post">
         <input type="text" name="fullname"/>
-        <input type="date" name="dob"/>
+        <input type="date" name="dob" value="{{current}}"/>
         <input type="text" name="residence"/>
         <input type="text" name="party"/>
         <input type="hidden" name="_csrf" value="{{_csrf.token}}">
