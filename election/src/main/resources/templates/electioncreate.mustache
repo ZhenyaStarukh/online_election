@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <body>
-
+{{>common}}
 <div><h1>Create new election</h1></div>
 
 {{#message}}
@@ -13,8 +13,8 @@
 <div>
     <form action="/election/create" method="post">
         <input type="text" name="place"/>
-        <input type="datetime-local" name="openDate" value="2020-12-23 08:00:00.0"/>
-        <input type="datetime-local" name="closeDate" value="2020-12-23 20:00:00.0"/>
+        <input type="datetime-local" name="openDate" value="{{current}}"/>
+        <input type="datetime-local" name="closeDate" value="{{current}}"/>
         <select name="type">
             {{#typeList}}
                 <option value="{{type}}">{{type}}</option>

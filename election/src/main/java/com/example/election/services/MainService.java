@@ -205,5 +205,11 @@ public class MainService {
         return Timestamp.valueOf(date.toString()+" 00:00:00.0");
   }
 
+  public boolean has18yo(Timestamp current, Date date){
+        Date currentDate = getDateFromTimestamp(current);
+        int diff = currentDate.getYear()-date.getYear();
+        return diff>=18;
+  }
+
 
 }

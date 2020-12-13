@@ -1,19 +1,79 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Реєстрація</title>
+</head>
 <body>
-<div><h1>Реєстрація</h1></div>
-{{#message}}
-    {{message}}
-{{/message}}
+{{>common}}
 
+
+
+<div class="container">
 <form action="/registration" method="post">
 
-    <div><label>Логін: <input type="text", name="username"/></label></div>
-    <div><label>Пароль: <input type="password", name="password"/></label></div>
-    <div><label>Стати адміном <input type="checkbox", name="admin"/></label></div>
-    <input type="hidden" name="_csrf" value="{{_csrf.token}}">
-    <div><input type="submit" value="Зареєструватися"/></div>
+    <div class="row">
+        <div class="col-sm">
+
+        </div>
+        <div class="col-sm">
+
+
+            <div class="box">
+
+                <div align="center"><h1>Реєстрація</h1></div>
+                <div>
+                    {{#message}}
+                        {{message}}
+                    {{/message}}
+                </div>
+
+                <div class="row" align="center">
+                    <div class="col">
+                        <label style="font-size:20px">Логін</label>
+                    </div>
+                    <div class="col">
+                        <input type="text" class="inputbox" autocomplete="off" name="username"/>
+                    </div>
+                </div>
+                <div class="row" align="center">
+                    <div class="col">
+                        <label style="font-size:20px">Пароль</label>
+                    </div>
+                    <div class="col">
+                        <input type="password" class="inputbox" autocomplete="off" name="password"/>
+                    </div>
+                </div>
+                <div align="center"><label>Стати адміном <input type="checkbox" name="admin"/></label></div>
+                <input type="hidden" name="_csrf" value="{{_csrf.token}}">
+                <div align="center"><input type="submit" style="border: 1px solid black" value="Зареєструватися"/></div>
+                <div>Вже є аккаунт? <a href="/login">Увійти</a> </div>
+            </div>
+
+        </div>
+        <div class="col-sm">
+
+        </div>
+
+    </div>
+
 </form>
-<div>Вже є аккаунт? <a href="/login">Увійти</a> </div>
+</div>
+
+<!--<div class="container">-->
+<!--<div class="row row-cols-2">-->
+<!--    <div class="col"><div align="center"><label>Логін: </label></div></div>-->
+<!--    <div class="col"><input type="text" class="inputbox" name="username"/></div>-->
+<!--</div>-->
+<!--<div class="row row-cols-2">-->
+<!--    <div class="col"><div align="center"><label>Пароль: </label></div></div>-->
+<!--    <div class="col"><input type="password" class="inputbox" name="password"/></div>-->
+<!--</div>-->
+<!--<div class="row row-cols-2">-->
+<!--    <input type="hidden" name="_csrf" value="{{_csrf.token}}">-->
+<!--    <div align="center"><input type="submit" value="Зареєструватися"/></div>-->
+<!--    <div>Вже є аккаунт? <a href="/login">Увійти</a> </div>-->
+<!--</div>    -->
+<!--</div>-->
+
 </body>
 </html>

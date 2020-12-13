@@ -70,11 +70,14 @@ public class RegistrationController {
     @GetMapping("/userPage")
     public String showUserPage(@AuthenticationPrincipal User user, Map<String, Object> model)
     {
+
         if (user.getFullName()==null) {
             return "redirect:/userInfo";
         }
         else if (mainService.isDeclined(user)){
+            System.out.println(user);
             model.put("message","Ваш запит було відхилено. Будь-ласка введіть інформацію ще раз.");
+            model.put("user",user);
             return "user";
         }
 
@@ -84,7 +87,8 @@ public class RegistrationController {
 
     @GetMapping("/userInfo")
     public String showDetails(@AuthenticationPrincipal User user, Map<String, Object> model){
-        if(!user.getIdNum().isBlank()) {
+
+        if(user.getIdNum() != null) {
             try {
                 user.setIdNum(AuxiliaryService.decodeId(user.getIdNum()));
             } catch (NoSuchAlgorithmException e) {
@@ -92,6 +96,7 @@ public class RegistrationController {
             }
             model.put("user",user);
         }
+        model.put("user",user);
         return "user";
     }
 
@@ -107,7 +112,8 @@ public class RegistrationController {
     @PostMapping("/userInfo")
     public String addDetails(@AuthenticationPrincipal User user, UserEdit userEdit, Map<String, Object> model){
 
-        if(!user.getIdNum().isBlank()) {
+        System.out.println(user);
+        if(user.getIdNum() != null) {
             try {
                 user.setIdNum(AuxiliaryService.decodeId(user.getIdNum()));
             } catch (NoSuchAlgorithmException e) {
@@ -125,6 +131,7 @@ public class RegistrationController {
             userService.save(userEdit, user);
         } catch (Exception e) {
             model.put("message", e.getMessage());
+            model.put("user",user);
             return "user";
         }
         model.put("user",user);
@@ -182,7 +189,10 @@ public class RegistrationController {
         }
 
 
-        if (!users.isEmpty()) model.put("users", users);
+        if (!users.isEmpty()) {
+            model.put("need","yes");
+            model.put("users", users);
+        }
 
 
         return "adminpage";

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<body>
+{{>common}}
+    <div class="row" style="background: #FFD700" >
+        <div class="col-sm"  align="center">
+            <form action="/main" method="get">
+                <input type="submit" value="Головна сторінка">
+                <input type="hidden" name="_csrf" value="{{_csrf.token}}">
+            </form>
+        </div>
+        <div class="col-sm"  align="center">
+            <form action="/main" method="post">
+                <input type="submit" value="Персональна сторінка">
+                <input type="hidden" name="_csrf" value="{{_csrf.token}}">
+            </form>
+        </div>
+        <div class="col-sm"  align="center">
+            <form action="/elections" method="get">
+                <input type="submit" value="До списку виборів"/>
+                <input type="hidden" name="_csrf" value="{{_csrf.token}}">
+            </form>
+        </div>
+        <div class="col-sm"  align="center">
+            <form action="/candidate" method="get">
+                <input type="submit" value="Переглянути список кандидатів"/>
+                <input type="hidden" name="_csrf" value="{{_csrf.token}}">
+            </form>
+        </div>
+        <div class="col-sm">
+
+        </div>
+        <div class="col-sm" align="right">
+            <form action="/logout" method="post">
+                <input type="submit" value="Вийти  "/>
+                <input type="hidden" name="_csrf" value="{{_csrf.token}}">
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>

@@ -1,10 +1,21 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <body>
-<div>
-    Hello, user
+{{>common}}
+<div class="container">
+    <h1 align="center">Про сайт</h1>
+    <div align="center">
+        тут буде текст про те як зараз реалізований сайт
+    </div>
 </div>
-<div><a href="/main">Go to main page</a></div>
+
+<div align="center">
+    <form action="/main" method="get">
+        <input type="submit" value="Головна сторінка">
+        <input type="hidden" name="_csrf" value="{{_csrf.token}}">
+    </form>
+</div>
+
 
 
 

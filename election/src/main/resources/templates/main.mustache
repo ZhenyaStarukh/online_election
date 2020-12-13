@@ -1,63 +1,72 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <body>
-<div>
-    <h1>Головна сторінка</h1>
-</div>
-{{login}}: Статус:
-<div>{{status}}</div>
-
-<div><form action="/main" method="post">
-    <input type="submit" value="Персональна сторінка"/>
-    <input type="hidden" name="_csrf" value="{{_csrf.token}}">
-</form> </div>
-
-
-
-
-
-<div><form action="/elections" method="get">
-    <input type="submit" value="До списку виборів"/>
-    <input type="hidden" name="_csrf" value="{{_csrf.token}}">
-</form> </div>
-
-
-<div><form action="/candidate" method="get">
-    <input type="submit" value="Переглянути список кандидатів."/>
-    <input type="hidden" name="_csrf" value="{{_csrf.token}}">
-</form> </div>
-
-
-
-
-
-
-<div><form action="/logout" method="post">
-    <input type="submit" value="Вийти"/>
-    <input type="hidden" name="_csrf" value="{{_csrf.token}}">
-</form> </div>
-
-
-
+{{>menu}}
 
 <div>
-    {{#celections}}
-        <div>
-            {{election.electionType.type}} election
-            {{election.openDate}}
-            {{election.closeDate}}
-
-            {{#candidate.fullname}}
-                {{candidate.fullname}}
-            {{/candidate.fullname}}
-            {{^candidate.fullname}}
-                Tie
-            {{/candidate.fullname}}
-            <a href="/election/{{election.id}}/details">Деталі</a>
+    <div class="row">
+        <div class="col">
+            <label style="font-size: 60px">Головна сторінка</label>
         </div>
-    {{/celections}}
+        <div class="col" align="right">
+            <label style="font-size: 50px; color: #FFD700">
+                {{login}}&nbsp;&nbsp;&nbsp;
+            </label>
+        </div>
+    </div>
+
 
 </div>
+<hr>
+<div>
+    {{#accepted}}
+        <div class="accepted">
+            <div>Вашу інформацію підтверджено.</div>
+            <div>Ви можете в повному обсязі використовувати можливості свого профілю.</div>
+        </div>
+    {{/accepted}}
+    {{#processing}}
+        <div class="processing">
+            <div>Ваша інформація оброблюється.</div>
+            <div>Після підтвердження Ви зможете в повному обсязі використовувати можливості свого профілю.</div>
+        </div>
+    {{/processing}}
+    {{#declined}}
+        <div class="declined">
+            <div>Інформація, яку ви надали, відхилена.</div>
+            <div>При переході на свою персональну сторінку Вам доведеться ще раз ввести усю інформацію.</div>
+        </div>
+    {{/declined}}
+</div>
+
+<div><label style="font-size: 35px">&nbsp;&nbsp;Результати виборів</label></div>
+
+<div class="container" align="center">
+    <table>
+        <tr>
+            <th>Вид виборів</th>
+            <th> Час відкриття голосування</th>
+            <th> Час завершення голосування</th>
+            <th> Переможець</th>
+            <th></th>
+        </tr>
+{{#celections}}
+        <tr>
+            <th>{{election.electionType.type}} вибори</th>
+            <th>{{election.openDate}}</th>
+            <th>{{election.closeDate}}</th>
+            <th>{{#candidate.fullname}}
+                    {{candidate.fullname}}
+                {{/candidate.fullname}}
+                {{^candidate.fullname}}
+                    Tie
+                {{/candidate.fullname}}</th>
+            <th><a href="/election/{{election.id}}/details">Деталі</a></th>
+        </tr>
+{{/celections}}
+    </table>
+</div>
+
 
 </body>
 </html>

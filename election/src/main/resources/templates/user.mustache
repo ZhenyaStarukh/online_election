@@ -1,31 +1,111 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <body>
+{{>menu}}
+<div><h1 align="center">Реєстрація: частина 2</h1></div>
+<div><h3 align="center">Для того, щоб Ви могли голосувати на цьому ресурсі, слід заповнити наступні дані.</h3></div>
 
-<div><h1>Реєстрація: частина 2</h1></div>
-<div><h3>Для того, щоб Ви могли голосувати на цьому ресурсі, слід заповнити наступні дані.</h3></div>
 
-{{#message}}
-    {{message}}
-{{/message}}
 
-{{#user}}
-    <form action="/userInfo" method="post">
+<div class="container">
+    {{#message}}
+        {{message}}
+    {{/message}}
+    {{#user}}
+        <form action="/userInfo" method="post">
+            <div class="box">
+                {{#idNum}}
+                <div class="row" align="center">
+                    <div class="col">
+                        <label>ІПН: </label>
+                    </div>
+                    <div class="col">
+                        <input type="text" autocomplete="off" class="inputbox" name="idNum" value="{{idNum}}"/>
+                    </div>
+                </div>
+                {{/idNum}}
+                {{^idNum}}
+                    <div class="row" align="center">
+                        <div class="col">
+                            <label>ІПН: </label>
+                        </div>
+                        <div class="col">
+                            <input type="text" autocomplete="off" class="inputbox" name="idNum"/>
+                        </div>
+                    </div>
+                {{/idNum}}
+                {{#fullName}}
+                    <div class="row" align="center">
+                        <div class="col">
+                            <label>ПІБ: </label>
+                        </div>
+                        <div class="col">
+                            <input type="text" autocomplete="off" class="inputbox" name="fullname" value="{{fullName}}"/>
+                        </div>
+                    </div>
+                {{/fullName}}
+                {{^fullName}}
+                    <div class="row" align="center">
+                        <div class="col">
+                            <label>ПІБ: </label>
+                        </div>
+                        <div class="col">
+                            <input type="text" autocomplete="off" class="inputbox" name="fullname"/>
+                        </div>
+                    </div>
+                {{/fullName}}
+                {{#dob}}
+                <div class="row" align="center">
+                    <div class="col">
+                        <label>Дата народження: </label>
+                    </div>
+                    <div class="col">
+                        <input type="date" autocomplete="off" name="dob" class="inputbox" value="{{dob}}"/>
+                    </div>
+                </div>
+                {{/dob}}
+                {{^dob}}
+                    <div class="row" align="center">
+                        <div class="col">
+                            <label>Дата народження: </label>
+                        </div>
+                        <div class="col">
+                            <input type="date" autocomplete="off" class="inputbox" name="dob"/>
+                        </div>
+                    </div>
+                {{/dob}}
+                {{#residence}}
+                <div class="row" align="center">
+                    <div class="col">
+                        <label>Місце прописки: </label>
+                    </div>
+                    <div class="col">
+                        <input type="text" autocomplete="off" class="inputbox" name="residence" value="{{residence}}"/>
+                    </div>
+                </div>
+                {{/residence}}
+                {{^residence}}
+                    <div class="row" align="center">
+                        <div class="col">
+                            <label>Місце прописки: </label>
+                        </div>
+                        <div class="col">
+                            <input type="text" autocomplete="off" class="inputbox" name="residence"/>
+                        </div>
+                    </div>
+                {{/residence}}
+                <input type="hidden" name="_csrf" value="{{_csrf.token}}">
+                <div><input type="submit" style="border: 1px solid black" value="Підтвердити"/></div>
+            </div>
 
-        {{#idNum}}<div><label>ІПН: <input type="text", name="idNum" value="{{idNum}}"/></label></div>{{/idNum}}
-        {{^idNum}}<div><label>ІПН: <input type="text", name="idNum"/></label></div>{{/idNum}}
-        {{#fullname}}<div><label>ПІБ: <input type="text", name="fullname" value="{{fullName}}"/></label></div>{{/fullname}}
-        {{^fullname}}<div><label>ПІБ: <input type="text", name="fullname"/></label></div>{{/fullname}}
-        {{#dob}}<div><label>Дата народження: <input type="date", name="dob" value="{{dob}}"/></label></div>{{/dob}}
-        {{^dob}} <div><label>Дата народження: <input type="date", name="dob"/></label></div>{{/dob}}
-        {{#residence}}<div><label>Місце прописки: <input type="text", name="residence" value="{{residence}}"/></label></div>{{/residence}}
-        {{^residence}}<div><label>Місце прописки: <input type="text", name="residence"/></label></div>{{/residence}}
-        <input type="hidden" name="_csrf" value="{{_csrf.token}}">
-        <div><input type="submit" value="Підтвердити"/></div>
+        </form>
+    {{/user}}
+</div>
 
-    </form>
-{{/user}}
 
-<a href="/main">Повернутися на головну сторінку</a>
+
+
+
+<!--<a href="/main">Повернутися на головну сторінку</a>-->
 </body>
 </html>

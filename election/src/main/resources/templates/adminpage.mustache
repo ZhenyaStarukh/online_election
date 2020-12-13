@@ -1,30 +1,43 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <body>
-
+{{>menu}}
 <div><h1>Admin page</h1></div>
 
 {{#message}}
     {{message}}
 {{/message}}
 
+{{#need}}
+<div class="container" align="center">
+    <table>
+        <tr>
+            <th>ІПН</th>
+            <th>ПІБ</th>
+            <th>Дата народження</th>
+            <th>Місце прописки</th>
+            <th></th>
+        </tr>
+        {{#users}}
+            <tr>
+                <th>{{#idNum}}{{idNum}}{{/idNum}} {{^idNum}}{{/idNum}}</th>
+                <th>{{#fullName}}{{fullName}}{{/fullName}} {{^fullName}} {{login}} {{/fullName}}</th>
+                <th>{{#dob}}{{dob}}{{/dob}} {{^dob}}{{/dob}}</th>
+                <th>{{#residence}}{{residence}}{{/residence}} {{^residence}}{{/residence}}</th>
+                <th><form action="/decline/{{login}}" method="post">
+                    <input type="hidden" name="_csrf" value="{{_csrf.token}}">
+                    <input type="submit" onclick="alert('Відхилено')" value="Відхилити"/>
+                </form>
+                    <form action="/accept/{{login}}" method="post">
+                        <input type="hidden" name="_csrf" value="{{_csrf.token}}">
+                        <input type="submit" onclick="alert('Прийнято')" value="Прийняти"/>
+                    </form></th>
+            </tr>
+        {{/users}}
+    </table>
 
-{{#users}}
-    <div>
-        {{#idNum}} {{idNum}}, {{/idNum}} {{^idNum}}{{/idNum}}
-        {{#fullName}}{{fullName}},{{/fullName}} {{^fullName}} {{login}} {{/fullName}}
-        {{#dob}}{{dob}},{{/dob}} {{^dob}}{{/dob}}
-        {{#residence}}{{residence}}{{/residence}} {{^residence}}{{/residence}}
-        <form action="/decline/{{login}}" method="post">
-            <input type="hidden" name="_csrf" value="{{_csrf.token}}">
-            <input type="submit" onclick="alert('Відхилено')" value="Відхилити"/>
-        </form>
-        <form action="/accept/{{login}}" method="post">
-            <input type="hidden" name="_csrf" value="{{_csrf.token}}">
-            <input type="submit" onclick="alert('Прийнято')" value="Прийняти"/>
-        </form>
-    </div>
-{{/users}}
+</div>
+{{/need}}
 {{^users}}
 
 {{/users}}

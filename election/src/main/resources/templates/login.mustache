@@ -1,15 +1,45 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Вхід у систему</title>
+</head>
 <body>
-<h1>Вхід</h1>
+{{>common}}
 
-<div>{{#message}}{{message}}{{/message}}</div>
-<form action="/login" method="post">
-    <div><label>Логін: <input type="text", name="username"/></label></div>
-    <div><label>Пароль: <input type="password", name="password"/></label></div>
-    <input type="hidden" name="_csrf" value="{{_csrf.token}}">
-    <div><input type="submit" value="Увійти"/></div>
-</form>
-<div>Don't have an account? <a href="/registration">Click here</a> </div>
+
+
+<div class="container">
+    <form action="/login" method="post">
+        <div class="row">
+            <div class="col-sm">
+
+            </div>
+            <div class="col-sm">
+                <div class="box">
+
+                    <div align="center"><h1>Вхід</h1></div>
+                    <div>
+                        {{#message}}
+                            {{message}}
+                        {{/message}}
+                    </div>
+                    <div align="center"><input class="inputbox" type="text" autocomplete="off" name="username" placeholder="Логін"/></div>
+                    <div align="center"><input class="inputbox" type="password" autocomplete="off" name="password" placeholder="Пароль"/></div>
+                    <input type="hidden" name="_csrf" value="{{_csrf.token}}">
+                    <div></div>
+                    <div align="center"><input type="submit" style="border: 1px solid black" value="Увійти"/></div>
+                    <div align="center">Немає акаунту?  <a href="/registration">Зареєструватися</a>  </div>
+                </div>
+            </div>
+            <div class="col-sm">
+
+            </div>
+
+        </div>
+    </form>
+</div>
+
+
+
 </body>
 </html>

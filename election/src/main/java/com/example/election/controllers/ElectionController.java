@@ -243,7 +243,9 @@ public class ElectionController {
     @PreAuthorize("hasAuthority('Administrator')")
     @GetMapping("/create")
     public String showCreatePage(@AuthenticationPrincipal User admin, Map<String, Object> model){
+        Timestamp current = new Timestamp(System.currentTimeMillis());
         if(!mainService.isAccepted(admin)) model.put("message","Ваш акаунт ще не перевірено!");
+        model.put("current",mainService.getTimestampWithZeroTime(current));
         model.put("typeList",mainService.findAllElectionTypes());
         return "electioncreate";
     }
@@ -251,6 +253,7 @@ public class ElectionController {
     @PreAuthorize("hasAuthority('Administrator')")
     @PostMapping("/create")
     public String createPage(@AuthenticationPrincipal User admin, Election election, String type,Map<String, Object> model){
+        Timestamp current = new Timestamp(System.currentTimeMillis());
         if(mainService.isAccepted(admin)){
             if (AuxiliaryService.timeIsOk(election.getOpenDate(),election.getCloseDate())){
                 Election newElection = new Election(election.getPlace(),
@@ -266,6 +269,7 @@ public class ElectionController {
             model.put("message","Ваш акаунт ще не перевірено!");
         }
         model.put("typeList",mainService.findAllElectionTypes());
+        model.put("current",mainService.getTimestampWithZeroTime(current));
         return "electioncreate";
     }
 
@@ -282,6 +286,9 @@ public class ElectionController {
             model.put("some_message", "Голосування ще не відкрилося!") ;
         else if (current.after(candidateElection.getElection().getCloseDate()))
             model.put("some_message", "Голосування вже закрито!") ;
+        else if (!mainService.has18yo(current,user.getDob())){
+            model.put("some_message", "Вам ще немає 18 років!");
+        }
         else {
             if (mainService.isAccepted(user)){
                 String hashedVoter, hashedElection;

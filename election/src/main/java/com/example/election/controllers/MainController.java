@@ -29,6 +29,7 @@ public class MainController {
 
     @PostMapping("/main")
     public String add(@AuthenticationPrincipal User user, Map<String,Object> model){
+        System.out.println(user);
         if (user.getRole().getName().equals("Administrator")) return "redirect:/adminPage";
         else return "redirect:/userPage";
     }
@@ -42,9 +43,9 @@ public class MainController {
 
     private String getStatusUA(Status status){
         return switch (status) {
-            case ACCEPTED -> "Вашу інформацію підтверджено.Ви можете в повному обсязі використовувати можливості свого профілю.";
-            case PROCESSING -> "Ваша інформація оброблюється.Після підтвердження Ви зможете в повному обсязі використовувати можливості свого профілю.";
-            case DECLINED -> "Інформація, яку ви надали, відхилена.При переході на свою персональну сторінку Вам доведеться ще раз ввести усю інформацію.";
+            case ACCEPTED -> "Вашу інформацію підтверджено.\nВи можете в повному обсязі використовувати можливості свого профілю.";
+            case PROCESSING -> "Ваша інформація оброблюється.\nПісля підтвердження Ви зможете в повному обсязі використовувати можливості свого профілю.";
+            case DECLINED -> "Інформація, яку ви надали, відхилена.\nПри переході на свою персональну сторінку Вам доведеться ще раз ввести усю інформацію.";
         };
     }
 
@@ -58,7 +59,12 @@ public class MainController {
             candidateElections.add(Objects.requireNonNullElseGet(winner, () -> new CandidateElection(null, election, null)));
         }
 
-        model.put("status",getStatusUA(user.getStatus()));
+//        model.put("status",getStatusUA(user.getStatus()));
+        switch (user.getStatus()) {
+            case ACCEPTED -> model.put("accepted", "yes");
+            case PROCESSING -> model.put("processing", "yes");
+            case DECLINED -> model.put("declined", "yes");
+        }
         model.put("celections",candidateElections);
         model.put("login", user.getLogin());
         return "main";
