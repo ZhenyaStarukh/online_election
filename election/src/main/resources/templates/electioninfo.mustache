@@ -1,73 +1,114 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <body>
-{{>common}}
-<div><h1>Election Details</h1></div>
+{{>menu}}
+<style>
+    td.blank, th.blank {
+  border: 1px solid white;
+  text-align: left;
+  padding: 8px;
+}
 
-{{#election}}
-    {{openDate}}  {{closeDate}}
-    {{#electionType}}
-        {{type}}
-    {{/electionType}}
-{{/election}}
+tr.blank:nth-child(even) {
+  background-color: white;
+}
+</style>
 
-<div><h2>Candidates</h2></div>
-
-{{#message}}
-    {{message}}
-{{/message}}
-
-
-{{#result}}
-
-    {{#candidatePercent}}
-        <div>
-            {{candidate.fullname}},
-            {{#candidate.party}}{{candidate.party}}, {{/candidate.party}} Link to program:
-            {{#programLink}}<a href="{{programLink}}">Посилання на програму</a>{{/programLink}}
-            {{voteNumber}} - {{percent}}%
+<div>
+    <div class="row">
+        <div class="col">
+            <label style="font-size: 60px; margin-left: 1.5%;">Деталі</label>
         </div>
-    {{/candidatePercent}}
-    {{^candidatePercent}}
-        Не знайдено жодного кандидата.
-    {{/candidatePercent}}
-
-{{/result}}
-{{^result}}
-{{#candidateElection}}
-
-    <div>
-        {{candidate.fullname}},
-        {{#candidate.party}}{{candidate.party}}, {{/candidate.party}} Link to program:
-        {{#programLink}}<a href="{{programLink}}">Посилання на програму</a>{{/programLink}}
-
-        {{#vote}}
-            <form action="/election/vote/{{id}}" method="post">
-                <input type="hidden" name="_csrf" value="{{_csrf.token}}">
-                <input type="submit" value="Vote for this Candidate"/>
-            </form>
-        {{/vote}}
-
-        <div><a href="/candidate/{{candidate.id}}">Детальніше про кандидата</a> </div>
     </div>
+</div>
+<div class="container">
+    <table style="font-size: 20px">
+{{#election}}
+        <tr class="blank">
+        {{#electionType}}
+            <td class="blank">
+                {{type}} вибори
+            </td>
+        {{/electionType}}
+            <td class="blank">Час початку: {{openDate}}</td>
+            <td class="blank">Час завершення: {{closeDate}}</td>
+        </tr>
 
-{{/candidateElection}}
+    </table>
+    {{/election}}
+    {{#message}}
+        {{message}}
+    {{/message}}
 
-{{^candidateElection}}
-    {{#some_message}}
-        {{some_message}}
-    {{/some_message}}
-{{/candidateElection}}
-{{/result}}
+</div>
 
-{{#add}}
-    <form action="/election/{{id}}/add" method="get">
-        <input type="hidden" name="_csrf" value="{{_csrf.token}}">
-        <input type="submit" value="Додати кандидатів"/>
-    </form>
-{{/add}}
 
-<a href="/elections">Go back to elections</a>
-<a href="/main">Go to main page</a>
+<hr>
+<div style="margin: 10px">&nbsp;</div>
+<div class="container">
+    <div class="infobox">
+
+        <div><h2 style="margin-left: 2.5%">Кандидати</h2></div>
+        {{#result}}
+            <table style="margin-left: 10%; margin-top: 20px;">
+                <tr>
+                    <th>ПІБ кандидата</th>
+                    <th>Партія</th>
+                    <th>Програма</th>
+                    <th>К-сть голосів</th>
+                    <th></th>
+                </tr>
+                {{#candidatePercent}}
+
+                    <tr>
+                        <td>{{candidate.fullname}}</td>
+                        <td>{{#candidate.party}}{{candidate.party}}{{/candidate.party}}{{^candidate.party}}Безпартійний{{/candidate.party}}</td>
+                        <td>{{#programLink}}<a href="{{programLink}}">Посилання на програму</a>{{/programLink}}</td>
+                        <td>{{voteNumber}}</td>
+                        <th>{{percent}}%</th>
+                    </tr>
+
+                {{/candidatePercent}}
+            </table>
+        {{/result}}
+        {{^result}}
+            <table align="center">
+                {{#candidateElection}}
+
+
+                    <tr>
+                        <td>{{candidate.fullname}}</td>
+                        <td>{{#candidate.party}}{{candidate.party}}{{/candidate.party}}{{^candidate.party}}Безпартійний{{/candidate.party}}</td>
+                        <td>{{#programLink}}<a href="{{programLink}}">Посилання на програму</a>{{/programLink}}</td>
+                        <td><a href="/candidate/{{candidate.id}}">Детальніше про кандидата</a> </td>
+                        {{#vote}}
+                            <td>
+                                <form action="/election/vote/{{id}}" method="post">
+                                    <input type="hidden" name="_csrf" value="{{_csrf.token}}">
+                                    <input type="submit" value="Проголосувати за цього кандидата"/>
+                                </form>
+                            </td>
+                        {{/vote}}
+                    </tr>
+
+                {{/candidateElection}}
+            </table>
+            {{^candidateElection}}
+                {{#some_message}}
+                    <div style="margin-left: 10%; margin-top: 20px;">{{some_message}}</div>
+                {{/some_message}}
+            {{/candidateElection}}
+        {{/result}}
+
+        {{#add}}
+            <div style="margin: 10px">&nbsp;</div>
+            <form action="/election/{{id}}/add" method="get">
+                <input type="hidden" name="_csrf" value="{{_csrf.token}}">
+                <input type="submit" value="Додати кандидатів"/>
+            </form>
+        {{/add}}
+        <div style="margin: 10px">&nbsp;</div>
+    </div>
+</div>
 </body>
 </html>

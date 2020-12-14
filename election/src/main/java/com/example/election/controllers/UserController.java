@@ -21,7 +21,7 @@ public class UserController {
 
     @GetMapping("/changePassword")
     public String showChangePassword(@AuthenticationPrincipal User user, Map<String,Object> model){
-
+        model.put("username",user.getLogin());
         return "changepassword";
     }
 
@@ -34,11 +34,13 @@ public class UserController {
 
         if (!user.getPassword().equals(oldPassword)){
             model.put("message", "Поточний пароль введено невірно!");
+            model.put("username",user.getLogin());
             return "changepassword";
         }
 
         user.setPassword(newPassword);
         mainService.saveUser(user);
+        model.put("username",user.getLogin());
         model.put("message","Успішно змінено!");
 
         return "changepassword";

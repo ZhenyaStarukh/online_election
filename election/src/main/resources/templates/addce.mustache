@@ -2,32 +2,76 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <body>
 
-<div><h1>Додати кандидата</h1></div>
-{{>common}}
-{{#message}}
-    {{message}}
-{{/message}}
+<div><h1></h1></div>
+{{>menu}}
+<style>
+    td, th {
+  border: 1px solid white;
+  text-align: left;
+  padding: 8px;
+}
 
-{{^message}}
-{{#candidate}}
-    <div>
-        {{id}},
-        {{fullname}},
-        {{dob}},
-        {{residence}},
-        {{#party}}{{party}}{{/party}}{{^party}}{{/party}}
-        <form action="/election/{{election_id}}/add/" method="post">
-        <input type="hidden" name="candidate_id" value="{{id}}">
-        <input type="hidden" name="_csrf" value="{{_csrf.token}}">
-        <input type="submit" value="Додати"/>
-        </form>
+tr:nth-child(even) {
+  background-color: white;
+}
+</style>
+
+<div>
+    <div class="row">
+        <div class="col">
+            <label style="font-size: 60px; margin-left: 1.5%;">Додати кандидата</label>
+        </div>
     </div>
-{{/candidate}}
-{{^candidate}}
-    Не знайдено жодного кандидата.
-{{/candidate}}
-{{/message}}
+</div>
+<hr>
+<div class="container">
+    <div class="infobox">
+        <div style="margin: 10px">&nbsp;</div>
+        {{#message}}
+            {{message}}
+        {{/message}}
 
-<a href="/main">На головну сторінку</a>
+        {{^message}}
+        <table>
+            {{#candidate}}
+
+                <tr>
+
+
+                <td class="col">
+                    {{id}}
+                </td>
+                <td class="col">
+                    {{fullname}}
+                </td>
+                <td class="col">
+                    {{dob}}
+                </td>
+                <td class="col">
+                    {{residence}}
+                </td>
+                <td class="col">
+                {{#party}}{{party}}{{/party}}
+                </td>
+                <td class="col">
+                    <form action="/election/{{election_id}}/add/" method="post">
+                        <input type="hidden" name="candidate_id" value="{{id}}">
+                        <input type="hidden" name="_csrf" value="{{_csrf.token}}">
+                        <input type="submit" value="Додати"/>
+                    </form>
+                </td>
+                </tr>
+
+            {{/candidate}}
+        </table>
+            {{^candidate}}
+                <div style="margin-left: 10%; margin-top: 20px;">Не знайдено жодного кадидата.</div>
+            {{/candidate}}
+        {{/message}}
+        <div style="margin: 10px">&nbsp;</div>
+    </div>
+</div>
+
+
 </body>
 </html>

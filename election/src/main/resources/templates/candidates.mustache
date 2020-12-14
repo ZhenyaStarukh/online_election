@@ -1,15 +1,33 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <body>
-{{>common}}
-<div><h1>Кандидати</h1></div>
+{{>menu}}
+<style>
+        td, th {
+  border: 1px solid white;
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: white;
+}
+</style>
+<div>
+    <div class="row">
+        <div class="col">
+            <label style="font-size: 60px; margin-left: 1.5%;">Кандидати</label>
+        </div>
+    </div>
+</div>
+
 
 {{#message}}
     {{message}}
 {{/message}}
 
 
-<div>
+<div class="container">
     <form action="/candidate" method="post">
         <label>Ім'я:<input type="text" name="name"/></label>
         <label>Місце проживання:<input type="text" name="place"/></label>
@@ -19,34 +37,32 @@
     </form>
 </div>
 
-
-{{#candidate}}
-    <div>
-        {{id}},
-        {{fullname}},
-        {{dob}},
-        {{residence}},
-        {{#party}}{{party}}{{/party}}{{^party}}{{/party}}
-        {{#admin}}
-        <form action="/candidate/edit/{{id}}" method="get">
-            <input type="hidden" name="_csrf" value="{{_csrf.token}}">
-            <input type="submit" value="Змінити"/>
-        </form>
-            <form action="/candidate/{{id}}/delete" method="post">
-                <input type="hidden" name="_csrf" value="{{_csrf.token}}">
-                <input type="submit" value="Видалити"/>
-            </form>
-        {{/admin}}
-        <form action="/election/candidate/{{id}}" method="get">
-            <input type="hidden" name="_csrf" value="{{_csrf.token}}">
-            <input type="submit" value="В яких виборах приймав/приймає участь"/>
-        </form>
-    </div>
-{{/candidate}}
-{{^candidate}}
-    Тут поки порожньо.
-{{/candidate}}
-
-<a href="/main">На головну сторінку</a>
+<div style="margin-left: 10%; margin-top: 20px; margin-right: 10%;" class="infobox">
+<table>
+    {{#candidate}}
+            <tr>
+                <td>{{fullname}}</td>
+                <td>{{dob}}</td>
+                <td>{{residence}}</td>
+                <td>{{#party}}{{party}}{{/party}}</td>
+                {{#admin}}<td align="center"><form action="/candidate/edit/{{id}}" method="get">
+                    <input type="hidden" name="_csrf" value="{{_csrf.token}}">
+                    <input type="submit" value="Змінити"/>
+                </form>
+                    <form action="/candidate/{{id}}/delete" method="post">
+                        <input type="hidden" name="_csrf" value="{{_csrf.token}}">
+                        <input type="submit" value="Видалити"/>
+                    </form></td>{{/admin}}
+                <td><form action="/election/candidate/{{id}}" method="get">
+                    <input type="hidden" name="_csrf" value="{{_csrf.token}}">
+                    <input type="submit" value="В яких виборах приймав/приймає участь"/>
+                </form></td>
+            </tr>
+    {{/candidate}}
+</table>
+    {{^candidate}}
+        <div style="margin-left: 10%; margin-top: 20px; font-size: 30px;">Тут поки порожньо.</div>
+    {{/candidate}}
+</div>
 </body>
 </html>

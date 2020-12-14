@@ -1,69 +1,95 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <body>
-{{>common}}
-<div><h1>Election List</h1></div>
+{{>menu}}
+<style>
+        td, th {
+  border: 1px solid white;
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: white;
+}
+</style>
+<div>
+    <div class="row">
+        <div class="col">
+            <label style="font-size: 60px; margin-left: 1.5%;">Вибори</label>
+        </div>
+    </div>
+</div>
+
 
 {{#message}}
     {{message}}
 {{/message}}
 
 {{#filter}}
-    <div>
-        <form action="/elections" method="post">
-            <select name="type">
-                <option value="closed">
-                    Closed
-                </option>
-                <option value="opened">
-                    Opened
-                </option>
-                <option value="not yet">
-                    Not Yet Opened
-                </option>
-            </select>
+<div class="container">
 
-            <label>Date:<input type="datetime-local" name="date" value="{{current}}"/></label>
+        <div>
+            <form action="/elections" method="post">
+                <select name="type">
+                    <option value="closed">
+                        Закриті
+                    </option>
+                    <option value="opened">
+                        Відкриті
+                    </option>
+                    <option value="not yet">
+                        Ще не відкриті
+                    </option>
+                </select>
 
-            <input type="hidden" name="_csrf" value="{{_csrf.token}}">
-            <input type="submit" value="Filter"/>
-        </form>
-    </div>
+                <label>Date: <input type="datetime-local" class="inputbox" name="date" value="{{current}}"/></label>
+
+                <input type="hidden" name="_csrf" value="{{_csrf.token}}">
+                <input type="submit" value="Filter"/>
+            </form>
+        </div>
+
+</div>
 {{/filter}}
+<div style="margin: 5px">&nbsp;</div>
+<div style="margin-left: 10%">
+    <table>{{#election}}
+
+            <tr>
+                {{#electionType.type}}<td class="col">{{electionType.type}}</td>{{/electionType.type}}
+                <td class="col">{{#place}}{{place}}{{/place}}</td>
+                <td class="col">{{openDate}}</td>
+                <td class="col">{{closeDate}}</td>
+                <td class="col"><form action="/election/{{id}}" method="get">
+                    <input type="hidden" name="_csrf" value="{{_csrf.token}}">
+                    <input type="submit" value="Переглянути деталі"/>
+                </form>
+                </td>
+                {{#edit}}
+                    <td class="col">
+                        <form action="/election/edit/{{id}}" method="get">
+                            <input type="hidden" name="_csrf" value="{{_csrf.token}}">
+                            <input type="submit" value="Змінити інформацію"/>
+                        </form>
+                    </td>
+                {{/edit}}
+                {{#vote}}
+                    <td class="col">
+                        <form action="/election/vote/{{id}}" method="get">
+                            <input type="hidden" name="_csrf" value="{{_csrf.token}}">
+                            <input type="submit" value="Проголосувати"/>
+                        </form>
+                    </td>
+                {{/vote}}
+            </tr>
 
 
+    {{/election}}</table>
+    {{^election}}
+        <div style="margin-left: 10%; margin-top: 20px; font-size: 30px;">Тут поки що порожньо.</div>
+    {{/election}}
+</div>
 
-{{#election}}
-    <div>
-        {{id}},
-        {{#place}}{{place}}, {{/place}}{{^place}}{{/place}}
-        {{openDate}},
-        {{closeDate}}
-        {{#electionType.type}}{{electionType.type}}{{/electionType.type}}
-        <form action="/election/{{id}}" method="get">
-            <input type="hidden" name="_csrf" value="{{_csrf.token}}">
-            <input type="submit" value="Переглянути деталі"/>
-        </form>
-
-        {{#edit}}
-            <form action="/election/edit/{{id}}" method="get">
-                <input type="hidden" name="_csrf" value="{{_csrf.token}}">
-                <input type="submit" value="Змінити інформацію"/>
-            </form>
-
-        {{/edit}}
-        {{#vote}}
-            <form action="/election/vote/{{id}}" method="get">
-                <input type="hidden" name="_csrf" value="{{_csrf.token}}">
-                <input type="submit" value="Проголосувати"/>
-            </form>
-        {{/vote}}
-    </div>
-{{/election}}
-{{^election}}
-   Тут поки що порожньо.
-{{/election}}
-
-<a href="/main">Go to main page</a>
 </body>
 </html>

@@ -1,27 +1,110 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
+
 <body>
-{{>common}}
-<div><h1>User page</h1></div>
+{{>menu}}
+<style>
+    td, th {
+  border: 1px solid white;
+  text-align: left;
+  padding: 8px;
+}
 
-{{#message}}
-    {{message}}
-{{/message}}
+tr:nth-child(even) {
+  background-color: white;
+}
 
-
+.infobox {
+border-radius: 25px;
+border: 3px solid #FFD700;
+padding: 10px;
+margin-left: 2.5%;
+}
+</style>
 <div>
-    <h3>Інформація</h3>
-    {{#user}}
-        <div>Логін: {{login}}</div>
-        <div>ПІБ: {{fullName}}</div>
-        <div>Дата народження: {{dob}}</div>
-        <div>Місце прописки: {{residence}}</div>
-    {{/user}}
+    <div class="row">
+        <div class="col">
+            <label style="font-size: 60px">Персональна сторінка</label>
+        </div>
+        <div class="col" align="right">
+            <label style="font-size: 50px; color: #FFD700">
+                {{username}}&nbsp;&nbsp;&nbsp;
+            </label>
+        </div>
+    </div>
+
+
 </div>
 
-<div><a href="/userInfo">Змінити інформацію про себе</a></div>
-<div><a href="/user/changePassword">Змінити пароль</a></div>
-<div><a href="/main">На головну сторінку</a></div>
+<hr>
+
+<div class="row">
+    <div class="col nopadding">
+        <div class="infobox">
+            <div>
+                <div>&nbsp;</div>
+                <h3>Інформація</h3>
+                {{#message}}
+                    {{message}}
+                {{/message}}
+            </div>
+
+            <div>
+                {{#user}}
+                    <table style="margin-left: 2.5%">
+                        <tr>
+                            <th align="right">Логін</th>
+                            <td>{{login}}</td>
+                        </tr>
+                        <tr>
+                            <th align="right">ПІБ</th>
+                            <td>{{fullName}}</td>
+                        </tr>
+                        <tr>
+                            <th align="right">Дата народження</th>
+                            <td>{{dob}}</td>
+                        </tr>
+                        <tr>
+                            <th align="right">Місце прописки</th>
+                            <td>{{residence}}</td>
+                        </tr>
+                    </table>
+
+                {{/user}}
+            </div>
+
+        </div>
+    </div>
+    <div class="col">
+        <div style="margin: 20px">&nbsp;</div>
+        <div class="row" >
+            <div class="col nopadding">
+                <form action="/user/changePassword" method="get">
+                    <input type="hidden" name="_csrf" value="{{_csrf.token}}">
+                    <input type="submit" value="Змінити пароль"/>
+                </form>
+                <form action="/userInfo" method="get">
+                    <input type="hidden" name="_csrf" value="{{_csrf.token}}">
+                    <input type="submit" value="Змінити інформацію про себе"/>
+                </form>
+            </div>
+            <div class="col">
+
+            </div>
+            <div class="col">
+
+            </div>
+            <div class="col">
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+
 
 </body>
 </html>

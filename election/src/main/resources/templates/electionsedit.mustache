@@ -43,7 +43,7 @@
         <form action="/election/editCE/{{id}}" method="post">
             <input type="text" name="programLink" value="{{programLink}}"/>
             <input type="hidden" name="_csrf" value="{{_csrf.token}}">
-            <input type="submit" value="Змінити"/>
+            <input type="submit" onclick="alert('Змінено!')" value="Змінити"/>
         </form>
 
         <form action="/election/editCE/{{id}}/delete" method="post">

@@ -82,6 +82,7 @@ public class RegistrationController {
         }
 
         model.put("user",user);
+        model.put("username",user.getLogin());
         return "userpage";
     }
 
@@ -135,6 +136,7 @@ public class RegistrationController {
             return "user";
         }
         model.put("user",user);
+        model.put("username",user.getLogin());
         return "userPage";
     }
 
@@ -160,6 +162,7 @@ public class RegistrationController {
     @GetMapping("/adminPage")
     public String showAdminPage(@AuthenticationPrincipal User admin, Map<String, Object> model)
     {
+
         if(mainService.isDeclined(admin)){
             model.put("message","Ваш запит було відхилено. Будь-ласка введіть інформацію ще раз.");
             return "admin";
@@ -184,6 +187,7 @@ public class RegistrationController {
                 }
             } catch (NoSuchAlgorithmException e) {
                 model.put("message",e.getMessage());
+                model.put("username",admin.getLogin());
                 return "adminpage";
             }
         }
@@ -192,9 +196,10 @@ public class RegistrationController {
         if (!users.isEmpty()) {
             model.put("need","yes");
             model.put("users", users);
+
         }
 
-
+        model.put("username",admin.getLogin());
         return "adminpage";
     }
 
@@ -220,13 +225,14 @@ public class RegistrationController {
             return "redirect:/adminPage";
         }
         else model.put("message","Ваш акаунт ще не перевірено!");
-
+        model.put("username",admin.getLogin());
         return "adminpage";
     }
 
     @PreAuthorize("hasAuthority('Administrator')")
     @PostMapping("/accept/{login}")
     public String accept(@AuthenticationPrincipal User admin,@PathVariable String login, Map<String, Object> model) {
+        model.put("username",admin.getLogin());
         if(mainService.isAccepted(admin)) {
             User user = userService.findByLogin(login);
             user.setStatus(Status.ACCEPTED);

@@ -1,34 +1,59 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <body>
-{{>common}}
-<div><h1>Create new election</h1></div>
-
-{{#message}}
-    {{message}}
-{{/message}}
-
-
-
+{{>menu}}
 <div>
-    <form action="/election/create" method="post">
-        <input type="text" name="place"/>
-        <input type="datetime-local" name="openDate" value="{{current}}"/>
-        <input type="datetime-local" name="closeDate" value="{{current}}"/>
-        <select name="type">
-            {{#typeList}}
-                <option value="{{type}}">{{type}}</option>
-            {{/typeList}}
-        </select>
-        <input type="hidden" name="_csrf" value="{{_csrf.token}}">
-        <input type="submit" value="Create"/>
-    </form>
+    <div class="row">
+        <div class="col">
+            <label style="font-size: 60px; margin-left: 1.5%;">Створення нових виборів</label>
+        </div>
+    </div>
+</div>
 
+<hr>
+
+
+<div class="container">
+    <div class="box" style="width:30%;">
+        {{#message}}
+            {{message}}
+        {{/message}}
+        <form action="/election/create" method="post">
+            <div class="row">
+                <div class="col" align="right">
+                    <label>Місце проведення: </label>
+                </div>
+                <div class="col">
+                    <input type="text" class="inputbox" name="place"/>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col" align="right">
+                    <label>Дата і час відкриття: </label>
+                </div>
+                <div class="col">
+                    <input type="datetime-local" class="inputbox" name="openDate" value="{{current}}"/>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col" align="right">
+                    <label>Дата і час закриття: </label>
+                </div>
+                <div class="col">
+                    <input type="datetime-local" class="inputbox" name="closeDate" value="{{current}}"/>
+                </div>
+            </div>
+            <div align="center"><label>Вид: <select name="type">
+                {{#typeList}}
+                    <option value="{{type}}">{{type}}</option>
+                {{/typeList}}
+            </select></label></div>
+            <input type="hidden" name="_csrf" value="{{_csrf.token}}">
+            <div align="center"><input type="submit" style="border: 1px solid black; width: 30%"  value="Створити"/></div>
+        </form>
+    </div>
 </div>
 
 
-
-
-<a href="/main">Go to main page</a>
 </body>
 </html>

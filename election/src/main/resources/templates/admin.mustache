@@ -1,20 +1,38 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <body>
-{{>common}}
-{{#message}}
-    {{message}}
-{{/message}}
+{{>menu}}
+<div><h1 align="center">Реєстрація: частина 2</h1></div>
+<div><h3 align="center">Для того, щоб Ви могли голосувати на цьому ресурсі, слід заповнити наступні дані.</h3></div>
 
 
-<form action="/adminInfo" method="post">
-    <div><h1>Реєстрація: частина 2</h1></div>
-    <div><h3>Для того, щоб Ви могли використовувати можливосі свого профілю, слід заповнити наступні дані.</h3></div>
-<!--    змінити формулювання (замість "місце")-->
-    <div><label>Місце: <input type="text", name="residence"/></label></div>
-    <input type="hidden" name="_csrf" value="{{_csrf.token}}">
-    <div><input type="submit" onclick="alert('Ваші дані відправлено на перевірку. Статус свого профілю Ви зможете побачити на головній сторінці.')" value="Підтвердити"/></div>
-    <a href="/main">На головну сторінку</a>
-</form>
+<div class="container">
+    {{#message}}
+        {{message}}
+    {{/message}}
+
+        <form action="/adminInfo" method="post">
+            <div class="box">
+
+                    <div class="row" align="center">
+                        <div class="col">
+                            <label>Місце: </label>
+                        </div>
+                        <div class="col">
+                            <input type="text" name="residence"/>
+                        </div>
+                    </div>
+
+
+
+                <input type="hidden" name="_csrf" value="{{_csrf.token}}">
+                <div><input type="submit"
+                            onclick="alert('Ваші дані відправлено на перевірку. Статус свого профілю Ви зможете побачити на головній сторінці.')"
+                            style="border: 1px solid black" value="Підтвердити"/></div>
+            </div>
+
+        </form>
+
+</div>
 </body>
 </html>

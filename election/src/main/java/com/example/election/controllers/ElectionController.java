@@ -106,6 +106,7 @@ public class ElectionController {
         return "addce";
     }
 
+    //добавить в гет и пост кнопку назад которая вернет на сраницу изменения выборов
     @PreAuthorize("hasAuthority('Administrator')")
     @PostMapping("{election_id}/add")
     public String addCandidateToElection(@AuthenticationPrincipal User admin,@PathVariable Long election_id,Long candidate_id, Map<String,Object> model){
@@ -115,6 +116,9 @@ public class ElectionController {
         Candidate candidate = mainService.getCandidateById(candidate_id);
         if(mainService.isAccepted(admin)) {
             if (isGoing(election, current)) model.put("message", "Не можна змінювати вибори, що проходять у даний момент!");
+            else if (election.getCloseDate().before(current)) {
+                model.put("message", "Не можна змінювати вибори, що вже пройшли!");
+            }
             else {
                 CandidateElection candidateElection = new CandidateElection(candidate, election, "");
                 mainService.saveCE(candidateElection);
@@ -140,7 +144,16 @@ public class ElectionController {
         Timestamp current = new Timestamp(System.currentTimeMillis());
         model.put("election_id",id);
         if(mainService.isAccepted(admin)) {
-            if (isGoing(election, current)) model.put("message", "Не можна змінювати вибори, що проходять у даний момент!");
+            if (isGoing(election, current)) {
+                model.put("message", "Не можна змінювати вибори, що проходять у даний момент!");
+                return "electionsedit";
+            }
+
+            else if (election.getCloseDate().before(current)) {
+                model.put("message", "Не можна змінювати вибори, що вже пройшли!");
+                return "electionsedit";
+            }
+
             else {
 
                 election.setPlace(place);
@@ -149,10 +162,15 @@ public class ElectionController {
                 election.setElectionType(mainService.findElectionType(type));
                 mainService.saveElection(election);
             }
+        }else
+        {
+            model.put("message","Ваш акаунт ще не перевірено!");
+            model.put("typeList",mainService.findAllElectionTypes());
+            return "electionsedit";
         }
-        else model.put("message","Ваш акаунт ще не перевірено!");
-        model.put("typeList",mainService.findAllElectionTypes());
-        return "electionsedit";
+
+        return "redirect:/elections";
+
     }
 
     @PreAuthorize("hasAuthority('Administrator')")
