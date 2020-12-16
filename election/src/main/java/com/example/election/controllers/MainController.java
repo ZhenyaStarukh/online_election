@@ -29,7 +29,6 @@ public class MainController {
 
     @PostMapping("/main")
     public String add(@AuthenticationPrincipal User user, Map<String,Object> model){
-        System.out.println(user);
         if (user.getRole().getName().equals("Administrator")) return "redirect:/adminPage";
         else return "redirect:/userPage";
     }

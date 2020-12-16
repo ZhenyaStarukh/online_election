@@ -28,6 +28,12 @@ public class UserController {
     @PostMapping("/changePassword")
     public String changePassword(@AuthenticationPrincipal User user, String oldPassword, String newPassword,Map<String,Object> model){
 
+        if (oldPassword.isBlank() || newPassword.isBlank()){
+            model.put("message","Поля повинні бути заповненими!");
+            model.put("username",user.getLogin());
+            return "changepassword";
+        }
+
         CustomPasswordEncoder customPasswordEncoder = new CustomPasswordEncoder();
         oldPassword = customPasswordEncoder.encode(oldPassword);
         newPassword = customPasswordEncoder.encode(newPassword);

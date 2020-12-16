@@ -41,6 +41,7 @@ public class CandidateController {
 
         name = makeLike(name);
         place = makeLike(place);
+        party = makeLike(party);
         List<Candidate> candidates;
         if(name.isBlank() && place.isBlank() && party.isBlank())
             candidates = mainService.findAllCandidates();
@@ -80,10 +81,14 @@ public class CandidateController {
     @PostMapping("{id}/delete")
     public String deleteC(@PathVariable Long id,@AuthenticationPrincipal User user, Map<String, Object> model){
         Candidate candidate = mainService.getCandidateById(id);
-        mainService.deleteCandidate(candidate);
-        List<Candidate> candidates = mainService.findAllCandidates();
-        model.put("admin","yes");
-        model.put("candidate",candidates);
+        if(mainService.isAccepted(user)){
+            mainService.deleteCandidate(candidate);
+            List<Candidate> candidates = mainService.findAllCandidates();
+            model.put("admin","yes");
+            model.put("candidate",candidates);
+        }
+        else model.put("message","Ваш акаунт ще не перевірено!");
+
         return "candidates";
     }
 
@@ -104,8 +109,11 @@ public class CandidateController {
         if(mainService.isAccepted(admin)) {
             model.put("candidate", candidate);
             if(candidate.getFullname().isBlank() || candidate.getResidence().isBlank())
-                model.put("message","Поля ПІБ та місця прописки повинні бути заповненими!");
-            else mainService.saveCandidate(candidate);
+                model.put("message","Поля ПІБ та місця реєстрації повинні бути заповненими!");
+            else {
+                mainService.saveCandidate(candidate);
+                return "redirect:/candidate";
+            }
         }
         else model.put("message","Ваш акаунт ще не перевірено!");
         return "candidateedit";
@@ -124,10 +132,11 @@ public class CandidateController {
     public String createCandidate(@AuthenticationPrincipal User admin, Candidate candidate, Map<String, Object> model){
         if(mainService.isAccepted(admin)){
             if(candidate.getFullname().isBlank() || candidate.getResidence().isBlank()){
-                model.put("message","Поля ПІБ та місця прописки повинні бути заповненими!");
+                model.put("message","Поля ПІБ та місця реєстрації повинні бути заповненими!");
                 model.put("current",mainService.getDateFromTimestamp(new Timestamp(System.currentTimeMillis())));
                 return "candidatesave";
             }
+
 
             else{
                 if(candidate.getParty().isBlank()) candidate.setParty("Безпартійний");
@@ -143,6 +152,5 @@ public class CandidateController {
             return "candidatesave";
         }
     }
-
 
 }

@@ -1,28 +1,64 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <body>
-{{>common}}
-<div><h1>Create new candidate</h1></div>
+{{>menu}}
+<style>
+        td, th {
+  border: 1px solid white;
+  text-align: left;
+  padding: 8px;
+}
 
-{{#message}}
-    {{message}}
-{{/message}}
-
-
+tr:nth-child(even) {
+  background-color: white;
+}
+</style>
 
 <div>
-    <form action="/candidate/create" method="post">
-        <input type="text" name="fullname"/>
-        <input type="date" name="dob" value="{{current}}"/>
-        <input type="text" name="residence"/>
-        <input type="text" name="party"/>
-        <input type="hidden" name="_csrf" value="{{_csrf.token}}">
-        <input type="submit" value="Create"/>
-    </form>
+    <div class="row">
+        <div class="col">
+            <label style="font-size: 60px; margin-left: 1.5%;">Додати нового кандидата</label>
+        </div>
+    </div>
 </div>
 
+<hr>
+
+<div class="container">
 
 
-<a href="/main">Go to main page</a>
+    <div class="infobox" align="center" style="width:30%; margin-left: 30%">
+        <div align="center">
+            {{#message}}
+                {{message}}
+            {{/message}}
+        </div>
+        <form action="/candidate/create" method="post">
+            <table>
+                <tr>
+                    <td>ПІБ: </td>
+                    <td><input type="text" class="inputbox" name="fullname"/></td>
+                </tr>
+                <tr>
+                    <td>Дата народження: </td>
+                    <td><input type="date"  class="inputbox" name="dob" value="{{current}}"/></td>
+                </tr>
+                <tr>
+                    <td>Місце реєстрації: </td>
+                    <td><input type="text" class="inputbox" name="residence"/></td>
+                </tr>
+                <tr>
+                    <td>Партія</td>
+                    <td><input type="text" class="inputbox" name="party"/></td>
+                </tr>
+            </table>
+            <input type="hidden" name="_csrf" value="{{_csrf.token}}">
+            <input type="submit" value="Створити"/>
+        </form>
+    </div>
+
+
+</div>
+
 </body>
 </html>

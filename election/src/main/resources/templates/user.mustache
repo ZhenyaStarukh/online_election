@@ -8,12 +8,14 @@
 
 
 <div class="container">
-    {{#message}}
-        {{message}}
-    {{/message}}
+    <div class="box" style="width: 25%;">
+        {{#message}}
+            {{message}}
+        {{/message}}
     {{#user}}
         <form action="/userInfo" method="post">
-            <div class="box">
+
+
                 {{#idNum}}
                 <div class="row" align="center">
                     <div class="col">
@@ -70,14 +72,14 @@
                             <label>Дата народження: </label>
                         </div>
                         <div class="col">
-                            <input type="date" autocomplete="off" class="inputbox" name="dob"/>
+                            <input type="date" autocomplete="off" class="inputbox" name="dob" value="{{current}}"/>
                         </div>
                     </div>
                 {{/dob}}
                 {{#residence}}
                 <div class="row" align="center">
                     <div class="col">
-                        <label>Місце прописки: </label>
+                        <label>Місце реєстрації: </label>
                     </div>
                     <div class="col">
                         <input type="text" autocomplete="off" class="inputbox" name="residence" value="{{residence}}"/>
@@ -87,7 +89,7 @@
                 {{^residence}}
                     <div class="row" align="center">
                         <div class="col">
-                            <label>Місце прописки: </label>
+                            <label>Місце реєстрації: </label>
                         </div>
                         <div class="col">
                             <input type="text" autocomplete="off" class="inputbox" name="residence"/>
@@ -95,11 +97,12 @@
                     </div>
                 {{/residence}}
                 <input type="hidden" name="_csrf" value="{{_csrf.token}}">
-                <div><input type="submit" onclick="alert('Ваші дані відправлено на перевірку. Статус свого профілю Ви зможете побачити на головній сторінці.')" style="border: 1px solid black" value="Підтвердити"/></div>
-            </div>
+                <div><input type="submit" style="border: 1px solid black" value="Підтвердити"/></div>
+
 
         </form>
     {{/user}}
+    </div>
 </div>
 
 

@@ -1,73 +1,123 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <body>
-{{>common}}
-<div><h1>Election List</h1></div>
+{{>menu}}
+<style>
+    td, th {
+  border: 0px;
+  text-align: left;
+  padding: 8px;
+}
 
-{{#message}}
-    {{message}}
-{{/message}}
-
-
-{{#election}}
-    <div>
-        <form action="/election/edit/{{id}}" method="post">
-            {{#place}}<input type="text" name="place" value="{{place}}"/>{{/place}}
-            {{^place}}<input type="text" name="place"/>{{/place}}
-            {{#openDate}}<input type="datetime-local" name="openDate" value="{{openDate}}"/>{{/openDate}}
-            {{^openDate}}<input type="datetime-local" name="openDate"/>{{/openDate}}
-            {{#closeDate}}<input type="datetime-local" name="closeDate" value="{{closeDate}}"/>{{/closeDate}}
-            {{^closeDate}}<input type="datetime-local" name="closeDate"/>{{/closeDate}}
-                <select name="type">
-                    {{#typeList}}
-                        <option value="{{type}}">{{type}}</option>
-                    {{/typeList}}
-                </select>
-            <input type="hidden" name="_csrf" value="{{_csrf.token}}">
-            <input type="submit" value="Змінити"/>
-        </form>
-
-        <form action="/election/edit/{{id}}/delete" method="post">
-            <input type="hidden" name="_csrf" value="{{_csrf.token}}">
-            <input type="submit" value="Видалити"/>
-        </form>
-
+tr:nth-child(even) {
+  background-color: white;
+}
+</style>
+<div>
+    <div class="row">
+        <div class="col">
+            <label style="font-size: 60px; margin-left: 1.5%;">Деталі</label>
+        </div>
     </div>
-{{/election}}
+</div>
+
+
+
+    <div class="container">
+        <div class="infobox" style="margin-left: 5px">
+
+            <table style="font-size: 20px">
+            {{#election}}
+                <tr>
+                    <form action="/election/edit/{{id}}" method="post">
+                        <td>
+                            {{#place}}<input type="text" class="inputbox" name="place" value="{{place}}"/>{{/place}}
+                            {{^place}}<input type="text" name="place" class="inputbox" placeholder="Місце проведення"/>{{/place}}
+                        </td>
+                        <td>
+                            {{#openDate}}<input type="datetime-local" class="inputbox" name="openDate" value="{{openDate}}"/>{{/openDate}}
+                            {{^openDate}}<input type="datetime-local" class="inputbox" name="openDate"/>{{/openDate}}
+                        </td>
+                        <td>
+                            {{#closeDate}}<input type="datetime-local" class="inputbox" name="closeDate" value="{{closeDate}}"/>{{/closeDate}}
+                            {{^closeDate}}<input type="datetime-local" class="inputbox" name="closeDate"/>{{/closeDate}}
+                        </td>
+                        <td>
+                            <select name="type">
+                                {{#typeList}}
+                                    <option value="{{type}}">{{type}}</option>
+                                {{/typeList}}
+                            </select>
+                        </td>
+                        <td>
+                            <input type="hidden" name="_csrf" value="{{_csrf.token}}">
+                            <input type="submit" value="Зберегти"/>
+                        </td>
+                    </form>
+                    <form action="/election/edit/{{id}}/delete" method="post">
+                        <td>
+                            <input type="hidden" name="_csrf" value="{{_csrf.token}}">
+                                <input type="submit" value="Видалити"/>
+                        </td>
+                    </form>
+
+                </tr>
+            {{/election}}
+            </table>
+
+
+            {{#message}}
+                {{message}}
+            {{/message}}
+
+        </div>
+    </div>
+
+<hr>
+
 
 {{^message}}
-{{#candidateElection}}
-    <div>
-        {{candidate.id}},
-        {{candidate.fullname}},
-        <form action="/election/editCE/{{id}}" method="post">
-            <input type="text" name="programLink" value="{{programLink}}"/>
-            <input type="hidden" name="_csrf" value="{{_csrf.token}}">
-            <input type="submit" onclick="alert('Змінено!')" value="Змінити"/>
-        </form>
+    <div class="container">
 
-        <form action="/election/editCE/{{id}}/delete" method="post">
-            <input type="hidden" name="_csrf" value="{{_csrf.token}}">
-            <input type="submit" value="Видалити"/>
-        </form>
+            <table>
+                {{#candidateElection}}
+                <tr>
+                    <td>{{candidate.id}}</td>
+                    <td>{{candidate.fullname}}</td>
+                    <form action="/election/editCE/{{id}}" method="post">
+                        <td>
+                            <input type="text" name="programLink" class="inputbox" placeholder="Гіперпосилання на програму" style="width: 350px" value="{{programLink}}"/>
+                            <input type="hidden" name="_csrf" value="{{_csrf.token}}">
+                        </td>
+                        <td>
+                            <input type="submit" onclick="alert('Змінено!')" value="Зберегти зміни"/>
+                        </td>
+                    </form>
+                    <form action="/election/editCE/{{id}}/delete" method="post">
+                        <td>
+                            <input type="hidden" name="_csrf" value="{{_csrf.token}}">
+                            <input type="submit" value="Видалити"/>
+                        </td>
+                    </form>
+                    <form action="/candidate/edit/{{candidate.id}}" method="get">
+                        <td>
+                            <input type="hidden" name="_csrf" value="{{_csrf.token}}">
+                            <input type="submit" value="Змінити інформацію кандидата"/>
+                        </td>
+                    </form>
+                    <td></td>
+                </tr>
+                {{/candidateElection}}
+            </table>
 
-         <form action="/candidate/edit/{{candidate.id}}" method="get">
+        {{^candidateElection}}
+            Не знайдено жодного кандидата.
+        {{/candidateElection}}
+        <form action="/election/{{id}}/add" method="get">
             <input type="hidden" name="_csrf" value="{{_csrf.token}}">
-            <input type="submit" value="Змінити інформацію кандидата"/>
+            <input type="submit" value="Додати кандидатів"/>
         </form>
     </div>
-{{/candidateElection}}
-{{^candidateElection}}
-    No candidates is found.
-{{/candidateElection}}
-
-<div>
-<form action="/election/{{id}}/add" method="get">
-    <input type="hidden" name="_csrf" value="{{_csrf.token}}">
-    <input type="submit" value="Додати кандидатів"/>
-</form>
-</div>
 {{/message}}
-<a href="/main">Go to main page</a>
 </body>
 </html>

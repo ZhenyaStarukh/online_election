@@ -22,16 +22,14 @@ tr:nth-child(even) {
 </div>
 
 
-{{#message}}
-    {{message}}
-{{/message}}
+
 
 
 <div class="container">
     <form action="/candidate" method="post">
-        <label>Ім'я:<input type="text" name="name"/></label>
-        <label>Місце проживання:<input type="text" name="place"/></label>
-        <label>Партія:<input type="text" name="party"/></label>
+        <label>Ім'я:<input type="text" class="inputbox" name="name"/></label>
+        <label>Місце проживання:<input type="text" class="inputbox" name="place"/></label>
+        <label>Партія:<input type="text" class="inputbox" name="party"/></label>
         <input type="hidden" name="_csrf" value="{{_csrf.token}}">
         <input type="submit" value="Фільтрувати"/>
     </form>
@@ -61,7 +59,12 @@ tr:nth-child(even) {
     {{/candidate}}
 </table>
     {{^candidate}}
-        <div style="margin-left: 10%; margin-top: 20px; font-size: 30px;">Тут поки порожньо.</div>
+        {{#message}}
+            {{message}}
+        {{/message}}
+        {{^message}}
+            <div style="margin-left: 10%; margin-top: 20px; font-size: 30px;">Тут поки порожньо.</div>
+        {{/message}}
     {{/candidate}}
 </div>
 </body>

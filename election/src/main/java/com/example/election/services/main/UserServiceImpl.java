@@ -60,7 +60,9 @@ public class UserServiceImpl implements UserService {
 
     public User save(UserEdit userEdit, User user) throws NoSuchAlgorithmException {
         user.setFullName(userEdit.getFullname());
+//        System.out.println("2)"+userEdit.getIdNum()+" user: "+user.getIdNum());
         user.setIdNum(AuxiliaryService.encodeId(userEdit.getIdNum()));
+//        System.out.println("3) "+AuxiliaryService.encodeId(userEdit.getIdNum())+" "+user.getIdNum());
         user.setResidence(userEdit.getResidence());
         user.setDob(userEdit.getDob());
         user.setStatus(Status.PROCESSING);

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.security.NoSuchAlgorithmException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -40,6 +41,11 @@ public class RegistrationController {
         User existing = userService.findByLogin(userDto.getUsername());
         if (existing!=null){
             model.put("message", "Користувач з таким іменем вже існує!");
+            return "registration";
+        }
+
+        if (userDto.getUsername().isBlank() || userDto.getPassword().isBlank()){
+            model.put("message","Будь-ласка, заповніть усі поля!");
             return "registration";
         }
 
@@ -71,14 +77,8 @@ public class RegistrationController {
     public String showUserPage(@AuthenticationPrincipal User user, Map<String, Object> model)
     {
 
-        if (user.getFullName()==null) {
+        if (user.getFullName()==null || mainService.isDeclined(user)) {
             return "redirect:/userInfo";
-        }
-        else if (mainService.isDeclined(user)){
-            System.out.println(user);
-            model.put("message","Ваш запит було відхилено. Будь-ласка введіть інформацію ще раз.");
-            model.put("user",user);
-            return "user";
         }
 
         model.put("user",user);
@@ -89,49 +89,82 @@ public class RegistrationController {
     @GetMapping("/userInfo")
     public String showDetails(@AuthenticationPrincipal User user, Map<String, Object> model){
 
+        Timestamp current = new Timestamp(System.currentTimeMillis());
+        model.put("current", mainService.getDateFromTimestamp(current));
+
+        if(mainService.isDeclined(user)) model.put("message", "Ваш запит було відхилено. Будь-ласка, введіть інформацію ще раз.");
+
         if(user.getIdNum() != null) {
             try {
                 user.setIdNum(AuxiliaryService.decodeId(user.getIdNum()));
             } catch (NoSuchAlgorithmException e) {
                 model.put("message","Щось пішло не так! Поверніться на головну сторінку.");
             }
-            model.put("user",user);
+
         }
         model.put("user",user);
         return "user";
     }
 
+    private boolean nullOrBlank(String string){
+        return string == null || string.isBlank();
+    }
 
     private boolean isNull(UserEdit userEdit){
-        return userEdit.getIdNum().isEmpty()
-                || userEdit.getDob() == null
-                || userEdit.getFullname().isEmpty()
-                || userEdit.getResidence().isEmpty();
+        return nullOrBlank(userEdit.getIdNum()) ||
+                nullOrBlank(userEdit.getFullname()) ||
+                nullOrBlank(userEdit.getResidence()) ||
+                userEdit.getDob() == null;
     }
+
 
     @PreAuthorize("hasAuthority('Voter')")
     @PostMapping("/userInfo")
     public String addDetails(@AuthenticationPrincipal User user, UserEdit userEdit, Map<String, Object> model){
-
-        System.out.println(user);
-        if(user.getIdNum() != null) {
-            try {
-                user.setIdNum(AuxiliaryService.decodeId(user.getIdNum()));
-            } catch (NoSuchAlgorithmException e) {
-                model.put("message","Щось пішло не так! Поверніться на головну сторінку");
+        Timestamp current = new Timestamp(System.currentTimeMillis());
+        model.put("current", mainService.getDateFromTimestamp(current));
+        if(userEdit.getResidence().isBlank()) userEdit.setResidence(null);
+        if(isNull(userEdit)){
+            model.put("message", "Будь-ласка, заповніть усі поля!");
+            if(userEdit.getDob()!=null && userEdit.getFullname()!=null)
+            if(user.getIdNum() != null && !userEdit.getIdNum().equals(user.getIdNum())){
+                try {
+                    user.setIdNum(AuxiliaryService.decodeId(user.getIdNum()));
+                } catch (NoSuchAlgorithmException e) {
+                    model.put("message","Щось пішло не так! Поверніться на головну сторінку");
+                }
             }
             model.put("user",user);
-        }
-        if(isNull(userEdit)){
-            model.put("message", "Будь-ласка заповніть усі поля!");
             return "user";
         }
+
+        if(mainService.isDeclined(user)) {
+            if (mainService.userMatch(userEdit,user)) {
+                model.put("message","Ці дані є неправильними, будь-ласка, введіть нові дані");
+                model.put("user",user);
+                return "user";
+            }
+
+        }
+        else{
+            if(mainService.userMatch(userEdit,user)) return "redirect:/userPage";
+            if(user.getIdNum() != null){
+                try {
+                    user.setIdNum(AuxiliaryService.decodeId(user.getIdNum()));
+                    model.put("user",user);
+                } catch (NoSuchAlgorithmException e) {
+                    model.put("message","Щось пішло не так! Поверніться на головну сторінку");
+                }
+            }
+        }
+
         try {
             if (!userEdit.getIdNum().matches("^[0-9]{10}$"))
                 throw new Exception("ІПН повинен бути 10тирозрядним числом!");
             userService.save(userEdit, user);
         } catch (Exception e) {
             model.put("message", e.getMessage());
+            user.setIdNum(null);
             model.put("user",user);
             return "user";
         }
@@ -143,6 +176,7 @@ public class RegistrationController {
 
     @GetMapping("/adminInfo")
     public String showDetailsA(@AuthenticationPrincipal User user, Map<String, Object> model){
+
         return "admin";
     }
 
@@ -151,10 +185,16 @@ public class RegistrationController {
     @PostMapping("/adminInfo")
     public String addDetailsA(@AuthenticationPrincipal User user, String residence, Map<String, Object> model){
 
-        user.setResidence(residence);
-        user.setStatus(Status.PROCESSING);
-        mainService.saveUser(user);
-        return "redirect:/adminPage";
+        if (residence.isBlank() && !user.getLogin().equals("mainAdmin")){
+            model.put("message","Будь-ласка, заповніть дане поле!");
+            return "admin";
+        }
+        else{
+            user.setResidence(residence);
+            user.setStatus(Status.PROCESSING);
+            mainService.saveUser(user);
+            return "redirect:/adminPage";
+        }
     }
 
 
@@ -164,11 +204,12 @@ public class RegistrationController {
     {
 
         if(mainService.isDeclined(admin)){
-            model.put("message","Ваш запит було відхилено. Будь-ласка введіть інформацію ще раз.");
+            model.put("message","Ваш запит було відхилено. Будь-ласка, введіть інформацію ще раз.");
             return "admin";
         }
         else if (admin.getResidence().isBlank() && !admin.getLogin().equals("mainAdmin")){
-            return "redirect:/adminInfo";
+            model.put("message","Будь-ласка, заповніть дане поле!");
+            return "admin";
         }
 
         List<User> users;
@@ -192,12 +233,18 @@ public class RegistrationController {
             }
         }
 
+        if(mainService.isAccepted(admin)){
+            if (!users.isEmpty()) {
+                model.put("need","yes");
+                model.put("users", users);
 
-        if (!users.isEmpty()) {
-            model.put("need","yes");
-            model.put("users", users);
-
+            }
         }
+        else
+            model.put("message", "Ваш акаунт ще не перевірено");
+
+
+
 
         model.put("username",admin.getLogin());
         return "adminpage";

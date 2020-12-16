@@ -12,7 +12,8 @@ public class CandidatePercent extends CandidateElection {
         this.election = candidateElection.getElection();
         this.programLink = candidateElection.getProgramLink();
         this.voteNumber = candidateElection.getVoteNumber();
-        this.percent = (double) ((100*candidateElection.getVoteNumber())/total);
+        if (total != 0) this.percent = (double) ((100*candidateElection.getVoteNumber())/total);
+        else this.percent = 0.0;
     }
 
     public Double getPercent() {

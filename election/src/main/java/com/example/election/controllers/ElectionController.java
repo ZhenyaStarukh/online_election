@@ -120,8 +120,12 @@ public class ElectionController {
                 model.put("message", "Не можна змінювати вибори, що вже пройшли!");
             }
             else {
-                CandidateElection candidateElection = new CandidateElection(candidate, election, "");
-                mainService.saveCE(candidateElection);
+                if (!canBeCandidate(candidate)) model.put("message", "Кандидату немає 35 років!");
+                else{
+                    CandidateElection candidateElection = new CandidateElection(candidate, election, "");
+                    mainService.saveCE(candidateElection);
+
+                }
                 List<Candidate> candidates = getCandidates(election);
                 if (candidates != null) model.put("candidate", candidates);
             }
@@ -131,6 +135,9 @@ public class ElectionController {
     }
 
 
+    private boolean canBeCandidate(Candidate candidate){
+        return mainService.hasXyo(new Timestamp(System.currentTimeMillis()), candidate.getDob(),35);
+    }
 
 
     @PreAuthorize("hasAuthority('Administrator')")
@@ -164,6 +171,8 @@ public class ElectionController {
             }
         }else
         {
+            if (election.getPlace()!=null && election.getPlace().isBlank()) election.setPlace(null);
+            model.put("election",election);
             model.put("message","Ваш акаунт ще не перевірено!");
             model.put("typeList",mainService.findAllElectionTypes());
             return "electionsedit";
@@ -179,15 +188,20 @@ public class ElectionController {
         Timestamp current = new Timestamp(System.currentTimeMillis());
         Election election = mainService.getElectionById(id);
         model.put("election_id",id);
+        model.put("current",current);
         if(mainService.isAccepted(admin))
         {
-            if(isGoing(election,current)) model.put("message","Не можна змінювати вибори, що проходять у даний момент!");
+            if(isGoing(election,current)) {
+                model.put("message","Не можна змінювати вибори, що проходять у даний момент!");
+                return "electionedit";
+            }
             else {
                 mainService.deleteElection(election);
             }
             model.put("election",mainService.findAllElections());
         }
         else model.put("message","Ваш акаунт ще не перевірено!");
+        model.put("filter","yes");
         return "elections";
     }
 
@@ -199,6 +213,7 @@ public class ElectionController {
             Election election = mainService.getElectionById(id);
             model.put("election_id",id);
         if (election != null) {
+            if (election.getPlace()!=null && election.getPlace().isBlank()) election.setPlace(null);
             model.put("election", election);
             List<CandidateElection> candidateElections = mainService.findAllCEByElection(election);
             model.put("candidateElection", candidateElections);
@@ -213,15 +228,21 @@ public class ElectionController {
     public String editCE(@AuthenticationPrincipal User admin, @PathVariable Long id, String programLink, Map<String, Object> model){
         Timestamp current = new Timestamp(System.currentTimeMillis());
         CandidateElection candidateElection = mainService.findCEById(id);
-        model.put("election_id",id);
+        Election election = candidateElection.getElection();
+        model.put("election_id",election.getId());
         if(mainService.isAccepted(admin)) {
             if (isGoing(candidateElection.getElection(), current)) {
                 model.put("message", "Не можна змінювати вибори, що проходять у даний момент!");
                 return "electionsedit";
-            } else {
+            }
+            else if (election.getCloseDate().before(current)) {
+                model.put("message", "Не можна змінювати вибори, що вже пройшли!");
+                return "electionsedit";
+            }
+            else {
                 candidateElection.setProgramLink(programLink);
                 mainService.saveCE(candidateElection);
-                Election election = mainService.getElectionById(id);
+                election.setPlace(null);
                 model.put("election",election);
                 model.put("candidateElection",mainService.findAllCEByElection(election));
                 model.put("typeList",mainService.findAllElectionTypes());
@@ -239,15 +260,23 @@ public class ElectionController {
     @PostMapping("/editCE/{id}/delete")
     public String deleteCE(@AuthenticationPrincipal User admin, @PathVariable Long id, Map<String, Object> model){
         Timestamp current = new Timestamp(System.currentTimeMillis());
-        model.put("election_id",id);
-
         CandidateElection candidateElection = mainService.findCEById(id);
+        Election election = candidateElection.getElection();
+        model.put("election_id",election.getId());
         if(mainService.isAccepted(admin)) {
             if (isGoing(candidateElection.getElection(), current)) {
                 model.put("message", "Не можна змінювати вибори, що проходять у даний момент!");
                 return "electionsedit";
-            } else {
+            }
+            else if (election.getCloseDate().before(current)) {
+                model.put("message", "Не можна змінювати вибори, що вже пройшли!");
+                return "electionsedit";
+            }
+            else {
                 mainService.deleteCE(candidateElection);
+                election.setPlace(null);
+                model.put("election",election);
+                model.put("candidateElection",mainService.findAllCEByElection(election));
                 model.put("typeList",mainService.findAllElectionTypes());
                 return "electionsedit";
             }
@@ -304,7 +333,7 @@ public class ElectionController {
             model.put("some_message", "Голосування ще не відкрилося!") ;
         else if (current.after(candidateElection.getElection().getCloseDate()))
             model.put("some_message", "Голосування вже закрито!") ;
-        else if (!mainService.has18yo(current,user.getDob())){
+        else if (!mainService.hasXyo(current,user.getDob(),18)){
             model.put("some_message", "Вам ще немає 18 років!");
         }
         else {

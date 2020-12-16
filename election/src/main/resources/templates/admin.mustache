@@ -7,28 +7,26 @@
 
 
 <div class="container">
-    {{#message}}
-        {{message}}
-    {{/message}}
+
 
         <form action="/adminInfo" method="post">
             <div class="box">
-
+                {{#message}}
+                    {{message}}
+                {{/message}}
                     <div class="row" align="center">
                         <div class="col">
                             <label>Місце: </label>
                         </div>
                         <div class="col">
-                            <input type="text" name="residence"/>
+                            <input type="text" class="inputbox" name="residence"/>
                         </div>
                     </div>
 
 
 
                 <input type="hidden" name="_csrf" value="{{_csrf.token}}">
-                <div><input type="submit"
-                            onclick="alert('Ваші дані відправлено на перевірку. Статус свого профілю Ви зможете побачити на головній сторінці.')"
-                            style="border: 1px solid black" value="Підтвердити"/></div>
+                <div><input type="submit" style="border: 1px solid black" value="Підтвердити"/></div>
             </div>
 
         </form>

@@ -39,10 +39,10 @@
     {{/declined}}
 </div>
 
-<div><label style="font-size: 35px">&nbsp;&nbsp;Результати виборів</label></div>
+<div><label style="font-size: 35px; margin-left: 20px; margin-top: 20px;">&nbsp;&nbsp;Результати виборів</label></div>
 
 <div class="container" align="center">
-    <table>
+    <table style="margin-top: 20px;">
         <tr>
             <th>Вид виборів</th>
             <th> Час відкриття голосування</th>
@@ -59,7 +59,7 @@
                     {{candidate.fullname}}
                 {{/candidate.fullname}}
                 {{^candidate.fullname}}
-                    Tie
+                    Нічия
                 {{/candidate.fullname}}</th>
             <th><a href="/election/{{election.id}}/details">Деталі</a></th>
         </tr>

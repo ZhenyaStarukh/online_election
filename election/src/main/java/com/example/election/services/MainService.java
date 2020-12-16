@@ -1,5 +1,6 @@
 package com.example.election.services;
 
+import com.example.election.classes.auxiliaryClasses.UserEdit;
 import com.example.election.classes.mainClasses.*;
 import com.example.election.repos.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Service;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class MainService {
@@ -205,10 +207,21 @@ public class MainService {
         return Timestamp.valueOf(date.toString()+" 00:00:00.0");
   }
 
-  public boolean has18yo(Timestamp current, Date date){
+  public boolean hasXyo(Timestamp current, Date date, int age){
         Date currentDate = getDateFromTimestamp(current);
         int diff = currentDate.getYear()-date.getYear();
-        return diff>=18;
+        return diff>=age;
+  }
+
+  private boolean safeEqual(String s1, String s2){
+      return (Objects.equals(s1, s2));
+  }
+
+  public boolean userMatch(UserEdit userEdit, User user){
+        return safeEqual(userEdit.getIdNum(),user.getIdNum())
+                && safeEqual(userEdit.getResidence(),user.getResidence())
+                && safeEqual(userEdit.getFullname(),user.getFullName())
+                && Objects.deepEquals(userEdit.getDob(),user.getDob());
   }
 
 
