@@ -36,7 +36,13 @@ public class MainController {
     private CandidateElection result(Election election){
         List<CandidateElection> winners = mainService.getWinner(election);
 
-        if(winners.size()==1) return winners.get(0);
+        if(winners.size()==1) {
+            Long total = mainService.getTotalVotes(election);
+            if (total!=0 && (double)(winners.get(0).getVoteNumber()*100)/total > 50.0){
+                    return winners.get(0);
+            }
+            else return null;
+        }
         else return null;
     }
 
