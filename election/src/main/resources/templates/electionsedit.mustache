@@ -25,22 +25,24 @@ tr:nth-child(even) {
 
     <div class="container">
         <div class="infobox" style="margin-left: 5px">
-
+            {{#message}}
+                {{message}}
+            {{/message}}
             <table style="font-size: 20px">
             {{#election}}
                 <tr>
                     <form action="/election/edit/{{id}}" method="post">
                         <td>
-                            {{#place}}<input type="text" class="inputbox" name="place" value="{{place}}"/>{{/place}}
-                            {{^place}}<input type="text" name="place" class="inputbox" placeholder="Місце проведення"/>{{/place}}
+                            {{#place}}<input type="text" autocomplete="off" class="inputbox" name="place" value="{{place}}"/>{{/place}}
+                            {{^place}}<input type="text" autocomplete="off" name="place" class="inputbox" placeholder="Місце проведення"/>{{/place}}
                         </td>
                         <td>
-                            {{#openDate}}<input type="datetime-local" class="inputbox" name="openDate" value="{{openDate}}"/>{{/openDate}}
-                            {{^openDate}}<input type="datetime-local" class="inputbox" name="openDate"/>{{/openDate}}
+                            {{#openDate}}<input type="datetime-local" autocomplete="off" class="inputbox" name="openDate" value="{{openDate}}"/>{{/openDate}}
+                            {{^openDate}}<input type="datetime-local" autocomplete="off" class="inputbox" name="openDate"/>{{/openDate}}
                         </td>
                         <td>
-                            {{#closeDate}}<input type="datetime-local" class="inputbox" name="closeDate" value="{{closeDate}}"/>{{/closeDate}}
-                            {{^closeDate}}<input type="datetime-local" class="inputbox" name="closeDate"/>{{/closeDate}}
+                            {{#closeDate}}<input type="datetime-local" autocomplete="off" class="inputbox" name="closeDate" value="{{closeDate}}"/>{{/closeDate}}
+                            {{^closeDate}}<input type="datetime-local" autocomplete="off" class="inputbox" name="closeDate"/>{{/closeDate}}
                         </td>
                         <td>
                             <select name="type">
@@ -66,9 +68,7 @@ tr:nth-child(even) {
             </table>
 
 
-            {{#message}}
-                {{message}}
-            {{/message}}
+
 
         </div>
     </div>
@@ -86,11 +86,11 @@ tr:nth-child(even) {
                     <td>{{candidate.fullname}}</td>
                     <form action="/election/editCE/{{id}}" method="post">
                         <td>
-                            <input type="text" name="programLink" class="inputbox" placeholder="Гіперпосилання на програму" style="width: 350px" value="{{programLink}}"/>
+                            <input type="text" name="programLink" autocomplete="off" class="inputbox" placeholder="Гіперпосилання на програму" style="width: 350px" value="{{programLink}}"/>
                             <input type="hidden" name="_csrf" value="{{_csrf.token}}">
                         </td>
                         <td>
-                            <input type="submit" onclick="alert('Змінено!')" value="Зберегти зміни"/>
+                            <input type="submit" value="Зберегти зміни"/>
                         </td>
                     </form>
                     <form action="/election/editCE/{{id}}/delete" method="post">

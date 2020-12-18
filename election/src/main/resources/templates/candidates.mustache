@@ -27,9 +27,9 @@ tr:nth-child(even) {
 
 <div class="container">
     <form action="/candidate" method="post">
-        <label>Ім'я:<input type="text" class="inputbox" name="name"/></label>
-        <label>Місце проживання:<input type="text" class="inputbox" name="place"/></label>
-        <label>Партія:<input type="text" class="inputbox" name="party"/></label>
+        <label>Ім'я:<input type="text" autocomplete="off" class="inputbox" name="name"/></label>
+        <label>Місце проживання:<input type="text" autocomplete="off" class="inputbox" name="place"/></label>
+        <label>Партія:<input type="text" autocomplete="off" class="inputbox" name="party"/></label>
         <input type="hidden" name="_csrf" value="{{_csrf.token}}">
         <input type="submit" value="Фільтрувати"/>
     </form>

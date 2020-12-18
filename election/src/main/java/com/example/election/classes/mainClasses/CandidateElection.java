@@ -11,11 +11,11 @@ public class CandidateElection {
     protected Long id;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
-    @JoinColumn(name = "candidate_id"/*, referencedColumnName = "id"*/)
+    @JoinColumn(name = "candidate_id")
     protected Candidate candidate;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
-    @JoinColumn(name = "election_id"/*, referencedColumnName = "id"*/)
+    @JoinColumn(name = "election_id")
     protected Election election;
 
     @Column(name = "votes_number")

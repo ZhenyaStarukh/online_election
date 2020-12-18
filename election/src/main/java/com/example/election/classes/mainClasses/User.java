@@ -22,10 +22,6 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Size(max=10)
-    @Column(name = "id_num", unique = true)
-    private String idNum;
-
     @Size(max=20)
     @Column(unique = true)
     private String login;
@@ -38,13 +34,6 @@ public class User implements UserDetails {
     @JoinColumn(name = "role_id", referencedColumnName = "id")
     private Role role;
 
-    @Size(max = 100)
-    @Column(name = "fullname")
-    private String fullName;
-
-    @Column
-    private Date dob;
-
     @Size(max=255)
     @Column(nullable = false, name = "place_of_residence")
     private String residence;
@@ -53,6 +42,10 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     @Type(type = "pgsql_enum")
     private Status status;
+
+    @OneToOne
+    @JoinColumn(name = "id", referencedColumnName = "id")
+    private Voter voter;
 
     public User() {
     }
@@ -87,13 +80,6 @@ public class User implements UserDetails {
 
     public void setPassword(String password) {
         this.password = password;
-//        try{
-//            this.password = AuxiliaryService.cipher(password,this.login);
-//        } catch (NoSuchAlgorithmException e){
-//            this.password = password;
-//            e.printStackTrace();
-//        }
-
     }
 
     public Role getRole() {
@@ -102,22 +88,6 @@ public class User implements UserDetails {
 
     public void setRole(Role role) {
         this.role = role;
-    }
-
-    public String getFullName() {
-        return fullName;
-    }
-
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
-    }
-
-    public Date getDob() {
-        return dob;
-    }
-
-    public void setDob(Date dob) {
-        this.dob = dob;
     }
 
     public String getResidence() {
@@ -136,22 +106,15 @@ public class User implements UserDetails {
         this.status = status;
     }
 
-    public String getIdNum() {
-        return idNum;
-    }
-
-    public void setIdNum(String idNum) {
-        this.idNum = idNum;
-    }
 
     @Override
     public String toString() {
         return "User{" +
-                "idNum='" + idNum + '\'' +
+                "idNum='" + voter.getIdNum() + '\'' +
                 ", login='" + login + '\'' +
                 ", role=" + role +
-                ", fullName='" + fullName + '\'' +
-                ", dob=" + dob +
+                ", fullName='" + voter.getFullName() + '\'' +
+                ", dob=" + voter.getDob() +
                 ", residence='" + residence + '\'' +
                 ", status=" + status +
                 '}';
@@ -186,6 +149,35 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+    public String getFullName() {
+        if (voter==null) return null;
+        else return voter.getFullName();
+    }
+
+    public void setFullName(String fullName) {
+        voter.setFullName(fullName);
+    }
+
+    public Date getDob() {
+        if (voter == null) return null;
+        else return voter.getDob();
+    }
+
+    public void setDob(Date dob) {
+        voter.setDob(dob);
+    }
+
+    public String getIdNum() {
+        if(voter == null) return null;
+        else return voter.getIdNum();
+    }
+
+    public void setIdNum(String idNum) {
+        voter.setIdNum(idNum);
+    }
+
+    public Voter getVoter(){return voter;}
 
 }
 

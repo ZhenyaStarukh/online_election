@@ -43,10 +43,10 @@ tr:nth-child(even) {
                     </option>
                 </select>
 
-                <label>Date: <input type="datetime-local" class="inputbox" name="date" value="{{current}}"/></label>
+                <label>Date: <input type="datetime-local" autocomplete="off" class="inputbox" name="date" value="{{current}}"/></label>
 
                 <input type="hidden" name="_csrf" value="{{_csrf.token}}">
-                <input type="submit" value="Filter"/>
+                <input type="submit" value="Фільтрувати"/>
             </form>
         </div>
 

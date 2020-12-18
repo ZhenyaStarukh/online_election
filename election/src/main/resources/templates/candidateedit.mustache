@@ -39,21 +39,21 @@ tr:nth-child(even) {
             <table>
                 <tr>
                     <td>ПІБ: </td>
-                    <td><input type="text" class="inputbox" name="fullname" value="{{fullname}}"/></td>
+                    <td><input type="text" autocomplete="off" class="inputbox" name="fullname" value="{{fullname}}"/></td>
                 </tr>
                 <tr>
                     <td>Дата народження: </td>
-                    <td><input type="date"  class="inputbox" name="dob" value="{{dob}}"/></td>
+                    <td><input type="date" autocomplete="off"  class="inputbox" name="dob" value="{{dob}}"/></td>
                 </tr>
                 <tr>
                     <td>Місце реєстрації: </td>
-                    <td><input type="text" class="inputbox" name="residence" value="{{residence}}"/></td>
+                    <td><input type="text" autocomplete="off" class="inputbox" name="residence" value="{{residence}}"/></td>
                 </tr>
                 <tr>
                     <td>Партія</td>
                     <td>
-                        {{#party}}<input type="text" class="inputbox" name="party" value="{{party}}"/>{{/party}}
-                        {{^party}}<input type="text" class="inputbox" name="party">{{/party}}
+                        {{#party}}<input type="text" autocomplete="off" class="inputbox" name="party" value="{{party}}"/>{{/party}}
+                        {{^party}}<input type="text" autocomplete="off" class="inputbox" name="party">{{/party}}
                     </td>
                 </tr>
             </table>

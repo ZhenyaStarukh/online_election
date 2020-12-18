@@ -147,7 +147,15 @@ public class RegistrationController {
 
         }
         else{
-            if(mainService.userMatch(userEdit,user)) return "redirect:/userPage";
+            if(mainService.userMatch(userEdit,user)) {
+                try {
+                    user.setIdNum(AuxiliaryService.encodeId(user.getIdNum()));
+                } catch (NoSuchAlgorithmException e) {
+                    model.put("message","Щось пішло не так! Поверніться на головну сторінку");
+                    return "user";
+                }
+                return "redirect:/userPage";
+            }
             if(user.getIdNum() != null){
                 try {
                     user.setIdNum(AuxiliaryService.decodeId(user.getIdNum()));
@@ -223,6 +231,7 @@ public class RegistrationController {
 
         for(User user: users){
             try {
+
                 if(user.getIdNum()!=null){
                     user.setIdNum(AuxiliaryService.decodeId(user.getIdNum()));
                 }

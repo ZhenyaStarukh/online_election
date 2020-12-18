@@ -19,7 +19,7 @@ public class Election {
     @Column
     private String place;
 
-    //or make only one date? and just check the default time and date
+
     @Column(name="opendate")
     private Timestamp openDate;
 
@@ -27,11 +27,10 @@ public class Election {
     private Timestamp closeDate;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "type_id"/*, referencedColumnName = "id"*/)
+    @JoinColumn(name = "type_id")
     private ElectionType electionType;
 
-//    @OneToMany(fetch = FetchType.EAGER, mappedBy = "election")
-//    private Set<CandidateElection> candidateElections;
+
 
     public Election() {
     }

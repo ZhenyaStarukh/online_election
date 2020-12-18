@@ -7,6 +7,7 @@ import com.example.election.classes.mainClasses.User;
 import com.example.election.config.encode.CustomPasswordEncoder;
 import com.example.election.repos.RoleRepo;
 import com.example.election.repos.UserRepo;
+import com.example.election.repos.VoterRepo;
 import com.example.election.services.AuxiliaryService;
 import com.example.election.web.UserRegistrationDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private RoleRepo roleRepo;
+
+    @Autowired
+    private VoterRepo voterRepo;
 
     @Autowired
     private CustomPasswordEncoder passwordEncoder;
@@ -59,13 +63,13 @@ public class UserServiceImpl implements UserService {
 
 
     public User save(UserEdit userEdit, User user) throws NoSuchAlgorithmException {
+
         user.setFullName(userEdit.getFullname());
-//        System.out.println("2)"+userEdit.getIdNum()+" user: "+user.getIdNum());
         user.setIdNum(AuxiliaryService.encodeId(userEdit.getIdNum()));
-//        System.out.println("3) "+AuxiliaryService.encodeId(userEdit.getIdNum())+" "+user.getIdNum());
         user.setResidence(userEdit.getResidence());
         user.setDob(userEdit.getDob());
         user.setStatus(Status.PROCESSING);
+        voterRepo.save(user.getVoter());
         return userRepo.save(user);
     }
 

@@ -193,7 +193,7 @@ public class ElectionController {
         {
             if(isGoing(election,current)) {
                 model.put("message","Не можна змінювати вибори, що проходять у даний момент!");
-                return "electionedit";
+                return "electionsedit";
             }
             else {
                 mainService.deleteElection(election);
@@ -329,37 +329,43 @@ public class ElectionController {
         model.put("vote","yes");
         CandidateElection candidateElection = mainService.findCEById(id);
 
-        if(current.before(candidateElection.getElection().getOpenDate()))
-            model.put("some_message", "Голосування ще не відкрилося!") ;
-        else if (current.after(candidateElection.getElection().getCloseDate()))
-            model.put("some_message", "Голосування вже закрито!") ;
-        else if (!mainService.hasXyo(current,user.getDob(),18)){
-            model.put("some_message", "Вам ще немає 18 років!");
+        if(!mainService.isAccepted(user)){
+            model.put("some_message","Ваш акаунт ще не перевірено!");
         }
-        else {
-            if (mainService.isAccepted(user)){
-                String hashedVoter, hashedElection;
-            try {
-                hashedVoter = AuxiliaryService.cipher(user.getLogin());
-                hashedElection = AuxiliaryService.cipher(candidateElection.getElection().getId().toString());
-            } catch (NoSuchAlgorithmException e) {
-                hashedVoter = user.getLogin();
-                hashedElection = candidateElection.getElection().getId().toString();
-                e.printStackTrace();
+        else{
+            if(current.before(candidateElection.getElection().getOpenDate()))
+                model.put("some_message", "Голосування ще не відкрилося!") ;
+            else if (current.after(candidateElection.getElection().getCloseDate()))
+                model.put("some_message", "Голосування вже закрито!") ;
+            else if (!mainService.hasXyo(current,user.getDob(),18)){
+                model.put("some_message", "Вам ще немає 18 років!");
             }
-            VoterElection voterElection = mainService.findByVoterAndElection(hashedVoter, hashedElection);
-            if(voterElection!=null) model.put("some_message","Ви вже проголосували!");
-            else{
-                mainService.saveVote(new VoterElection(hashedVoter,hashedElection));
-                candidateElection.incrementVoteNumber();
-                mainService.saveCE(candidateElection);
+            else {
+                if (mainService.isAccepted(user)){
+                    String hashedVoter, hashedElection;
+                    try {
+                        hashedVoter = AuxiliaryService.cipher(user.getLogin());
+                        hashedElection = AuxiliaryService.cipher(candidateElection.getElection().getId().toString());
+                    } catch (NoSuchAlgorithmException e) {
+                        hashedVoter = user.getLogin();
+                        hashedElection = candidateElection.getElection().getId().toString();
+                        e.printStackTrace();
+                    }
+                    VoterElection voterElection = mainService.findByVoterAndElection(hashedVoter, hashedElection);
+                    if(voterElection!=null) model.put("some_message","Ви вже проголосували!");
+                    else{
+                        mainService.saveVote(new VoterElection(hashedVoter,hashedElection));
+                        candidateElection.incrementVoteNumber();
+                        mainService.saveCE(candidateElection);
 
-                model.put("message","Дякуємо!Ваш голос записано!");
-            }
+                        model.put("some_message","Дякуємо!Ваш голос записано!");
+                    }
+
+                }
 
             }
-            else model.put("some_message","Ваш акаунт ще не перевірено!");
         }
+
         return "electioninfo";
     }
 
