@@ -3,6 +3,7 @@
 <body>
 {{>common}}
     <div class="row" style="background: #FFD700" >
+
         <div class="col-sm"  align="center">
             <form action="/main" method="get">
                 <input type="submit" value="Головна сторінка">
@@ -27,9 +28,16 @@
                 <input type="hidden" name="_csrf" value="{{_csrf.token}}">
             </form>
         </div>
+        <div class="col-sm" align="center">
+            <form action="/" method="get">
+                <input type="submit" value="Інформація"/>
+                <input type="hidden" name="_csrf" value="{{_csrf.token}}">
+            </form>
+        </div>
         <div class="col-sm">
 
         </div>
+
         <div class="col-sm" align="right">
             <form action="/logout" method="post">
                 <input type="submit" value="Вийти"/>

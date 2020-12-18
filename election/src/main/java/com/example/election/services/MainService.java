@@ -224,5 +224,13 @@ public class MainService {
                 && Objects.deepEquals(userEdit.getDob(),user.getDob());
   }
 
+  public boolean canDelete(Candidate candidate, Timestamp current){
+        List<CandidateElection> candidateElections = candidateElectionRepo.findAllByCandidate(candidate);
+        for(CandidateElection candidateElection: candidateElections){
+            if(candidateElection.getElection().getOpenDate().before(current)) return false;
+        }
+        return true;
+  }
+
 
 }

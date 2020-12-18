@@ -80,9 +80,14 @@ public class CandidateController {
     @PreAuthorize("hasAuthority('Administrator')")
     @PostMapping("{id}/delete")
     public String deleteC(@PathVariable Long id,@AuthenticationPrincipal User user, Map<String, Object> model){
+        Timestamp current = new Timestamp(System.currentTimeMillis());
         Candidate candidate = mainService.getCandidateById(id);
+
         if(mainService.isAccepted(user)){
-            mainService.deleteCandidate(candidate);
+            if(mainService.canDelete(candidate,current)){
+                mainService.deleteCandidate(candidate);
+            }
+
             List<Candidate> candidates = mainService.findAllCandidates();
             model.put("admin","yes");
             model.put("candidate",candidates);
